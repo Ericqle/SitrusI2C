@@ -1,5 +1,6 @@
 <I2CScreen>:
     id: i2c_screen
+    i2c_tabbed_panel: i2c_tabbed_panel
 
     ActionBar:
         pos_hint: {'top':1}
@@ -32,6 +33,10 @@
         orientation: 'vertical'
         padding: 5
         spacing: 5
+
+        TabbedPanel:
+            id: i2c_tabbed_panel
+            do_default_tab: False
 
     BoxLayout:
         size_hint: .2, .915
