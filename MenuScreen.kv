@@ -1,0 +1,30 @@
+
+<MenuScreen>:
+    id: menu_screen
+
+    BoxLayout:
+        orientation: 'horizontal'
+        padding: 25
+        spacing: 25
+
+        BoxLayout:
+            orientation: 'vertical'
+            spacing: 5
+            padding: 5
+
+            TextInput:
+                size_hint: 1, .2
+
+            Button:
+                text: 'Load Config'
+
+        BoxLayout:
+            orientation: 'vertical'
+
+            Label:
+                text: "Available Ports"
+                size_hint: 1, .2
+
+            Button:
+                text: 'test'
+                on_press: root.manager.current = 'i2c_screen'

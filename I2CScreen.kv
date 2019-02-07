@@ -1,0 +1,44 @@
+<I2CScreen>:
+    id: i2c_screen
+
+    ActionBar:
+        pos_hint: {'top':1}
+        size_hint_y: .075
+        ActionView:
+            use_separator: True
+
+            ActionPrevious:
+                title: 'I2C Tool'
+                with_previous: False
+
+            ActionButton:
+                text: "Menu"
+                on_press: root.manager.current = 'menu_screen'
+
+            ActionButton:
+                text: "Write"
+
+            ActionGroup:
+                text: 'Script'
+                mode: 'spinner'
+                ActionButton:
+                    text: "Load Scripts"
+
+                ActionButton:
+                    text: "Run Script"
+
+    BoxLayout:
+        size_hint: .8, .925
+        orientation: 'vertical'
+        padding: 5
+        spacing: 5
+
+    BoxLayout:
+        size_hint: .2, .915
+        pos_hint: {'x': .8, 'y': 0}
+        orientation: 'vertical'
+        padding: 5
+        spacing: 5
+
+        Label:
+            text: "Scripts"
