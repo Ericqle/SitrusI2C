@@ -12,7 +12,7 @@ Builder.load_string('''
         text: 'Name'
     Button:
         text: 'Data'
-        on_press: print("hi")
+        on_press: app.root.get_screen("i2c_screen").write()
 
 <I2cRecycleView@RecycleView>:
     viewclass: 'I2cRecycleViewRow'

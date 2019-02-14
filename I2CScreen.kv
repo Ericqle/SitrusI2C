@@ -1,3 +1,32 @@
+<I2cWritePopup@Popup>:
+    title: "Write"
+    size_hint: .5, .35
+    auto_dismiss: False
+
+    BoxLayout:
+        orientation: 'vertical'
+
+        BoxLayout:
+            orientation: 'horizontal'
+            padding: 5
+            spacing: 5
+            Label:
+                text: 'Data(HEX): '
+            TextInput:
+
+        BoxLayout:
+            orientation: 'horizontal'
+            padding: 5
+            spacing: 5
+            Button:
+                text: 'Cancel'
+                on_press: root.dismiss()
+            Button:
+                text: 'Write'
+                on_press:
+                    # INSERT WRITE FUNCTION
+                    root.dismiss()
+
 <I2CScreen>:
     id: i2c_screen
     i2c_tabbed_panel: i2c_tabbed_panel
@@ -15,9 +44,6 @@
             ActionButton:
                 text: "Menu"
                 on_press: root.manager.current = 'menu_screen'
-
-            ActionButton:
-                text: "Write"
 
             ActionGroup:
                 text: 'Script'
