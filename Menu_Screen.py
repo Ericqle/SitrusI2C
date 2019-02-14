@@ -6,10 +6,12 @@ Builder.load_string('''
 <I2cRecycleViewRow@BoxLayout>:
     orientation: 'horizontal'
     text : ''
-    Label:
-        text: root.text
     Button:
-        text: 'Show'
+        text: 'Address'
+    Label:
+        text: 'Name'
+    Button:
+        text: 'Data'
         on_press: print("hi")
 
 <I2cRecycleView@RecycleView>:
