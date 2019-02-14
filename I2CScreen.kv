@@ -29,7 +29,7 @@
                     text: "Run Script"
 
     BoxLayout:
-        size_hint: .8, .925
+        size_hint: 1, .925
         orientation: 'vertical'
         padding: 5
         spacing: 5
@@ -38,12 +38,5 @@
             id: i2c_tabbed_panel
             do_default_tab: False
 
-    BoxLayout:
-        size_hint: .2, .915
-        pos_hint: {'x': .8, 'y': 0}
-        orientation: 'vertical'
-        padding: 5
-        spacing: 5
-
-        Label:
-            text: "Scripts"
+        RstDocument:
+            size_hint: 1, .5
