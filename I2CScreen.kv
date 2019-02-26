@@ -10,22 +10,101 @@
             orientation: 'horizontal'
             padding: 5
             spacing: 5
+
             Label:
                 text: 'Data(HEX): '
+
             TextInput:
 
         BoxLayout:
             orientation: 'horizontal'
             padding: 5
             spacing: 5
+
             Button:
                 text: 'Cancel'
                 on_press: root.dismiss()
+
             Button:
                 text: 'Write'
                 on_press:
                     # INSERT WRITE FUNCTION
                     root.dismiss()
+
+<I2cLoadScriptPopup@Popup>:
+    title: "Load Script"
+    auto_dismiss: True
+    size_hint: .75, 1
+
+    BoxLayout:
+        orientation: 'vertical'
+        spacing: 25
+        padding: 25
+
+        TextInput:
+            id: script_file_text_input
+            text: script_file_chooser.selection and script_file_chooser.selection[0] or ''
+            size_hint: 1, .2
+
+        FileChooserListView:
+            id: script_file_chooser
+            path: '/users/eric/Desktop/'
+
+        BoxLayout:
+            orientation: 'horizontal'
+            padding: 5
+            spacing: 5
+            size_hint: 1, .2
+
+            Button:
+                text: 'Cancel'
+                on_press:
+                    root.dismiss()
+            Button:
+                text: 'Load'
+                on_press:
+                    # INSERT LOAD SCRIPT
+                    root.dismiss()
+
+<I2cRunScriptPopup@Popup>:
+    title: "Run Script"
+    auto_dismiss: True
+    size_hint: .75, 1
+
+    BoxLayout:
+        orientation: 'vertical'
+        spacing: 25
+        padding: 25
+
+        BoxLayout:
+            orientation: 'horizontal'
+            padding: 5
+            spacing: 5
+            size_hint: 1, .2
+
+            BoxLayout:
+                orientation: 'vertical'
+
+                RecycleView:
+
+                Button:
+                    text: 'Cancel'
+                    size_hint: 1, .25
+                    on_press:
+                        root.dismiss()
+
+            BoxLayout:
+                orientation: 'vertical'
+
+                RecycleView:
+
+                Button:
+                    text: 'Run'
+                    size_hint: 1, .25
+                    on_press:
+                        # INSERT LOAD SCRIPT
+                        root.dismiss()
+
 
 <I2CScreen>:
     id: i2c_screen
@@ -55,11 +134,14 @@
             ActionGroup:
                 text: 'Script'
                 mode: 'spinner'
+
                 ActionButton:
                     text: "Load Scripts"
+                    on_press: i2c_screen.open_load_script()
 
                 ActionButton:
                     text: "Run Script"
+                    on_press: i2c_screen.open_run_script()
 
     BoxLayout:
         size_hint: 1, .925
