@@ -121,6 +121,7 @@
 <I2CScreen>:
     id: i2c_screen
     i2c_tabbed_panel: i2c_tabbed_panel
+    address_details_rst: address_details_rst
 
     canvas.before:
         Color:
@@ -166,4 +167,5 @@
             do_default_tab: False
 
         RstDocument:
+            id: address_details_rst
             size_hint: 1, .5
