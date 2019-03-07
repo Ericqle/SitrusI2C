@@ -4,7 +4,7 @@ from kivy.factory import Factory
 
 class I2CScreen(Screen):
 
-    def initialize_dat(self):
+    def initialize_data(self):
         address_list = self.manager.get_screen("menu_screen").address_list
         chip_pin_list = self.manager.get_screen("menu_screen").chip_pin_list
 

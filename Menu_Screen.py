@@ -79,16 +79,13 @@ class I2cAddress:
         self.default += data[2]
 
 
-class I2cTabbedPanelItem(TabbedPanelItem):
-    pass
+class I2cLane:
 
-
-class MenuScreen(Screen):
-    address_list = list()
-    chip_pin_list = list()
-
-    def load_addresses(self):
-        with open('/Users/eric/Downloads/Athena A0 Test/Host_RX_01.csv') as csv_file:
+    def __init__(self, file):
+        self.name = re.split('/', file)[-1].rstrip('.csv')
+        self.i2c_address_list = list()
+        self.chip_pin_list = list()
+        with open(file) as csv_file:
             csv_reader = csv.reader(csv_file, delimiter=';')
             temp_address = None
             for row in csv_reader:
@@ -99,11 +96,11 @@ class MenuScreen(Screen):
                     if row[0] == temp_address.i2c_address:
                         temp_address.add_bit(row)
                     else:
-                        self.address_list.append(temp_address)
+                        self.i2c_address_list.append(temp_address)
                         temp_address = I2cAddress(row)
 
             temp_chip_pin = None
-            for address in self.address_list:
+            for address in self.i2c_address_list:
                 if temp_chip_pin is None:
                     temp_chip_pin = I2cChipPin(address)
                     temp_chip_pin.add_address(address)
@@ -115,16 +112,39 @@ class MenuScreen(Screen):
                     temp_chip_pin = I2cChipPin(address)
                     temp_chip_pin.add_address(address)
 
+    def get_i2c_address(self, address):
+        for i2c_address in self.i2c_address_list:
+            if i2c_address.i2c_address == address:
+                return i2c_address
+        return None
+
+
+class I2cTabbedPanelItem(TabbedPanelItem):
+    pass
+
+
+class MenuScreen(Screen):
+    lane_list = list()
+
+    def load_lanes(self, config_files):
+        for config_file in config_files:
+            temp_lane = I2cLane(config_file)
+            self.lane_list.append(temp_lane)
+
     def swap_to_i2c_screen(self):
-        self.load_addresses()
+
+        self.load_lanes(['/Users/eric/Downloads/Athena A0 Test/Host_RX_01.csv',
+                         '/Users/eric/Downloads/Athena A0 Test/Host_RX_23.csv'])
+
         i2c_screen = self.manager.get_screen("i2c_screen")
 
         i2c_screen.i2c_tabbed_panel.clear_widgets()
         i2c_screen.i2c_tabbed_panel.clear_tabs()
 
-        new_tab = I2cTabbedPanelItem(text="Test")
-        new_tab.i2c_recycle_View.data = [{'address': address.i2c_address, 'chip_pin': address.chip_pin_name,
-                                          'value': address.value} for address in self.address_list]
-        i2c_screen.i2c_tabbed_panel.add_widget(new_tab)
+        for lane in self.lane_list:
+            new_tab = I2cTabbedPanelItem(text=lane.name)
+            new_tab.i2c_recycle_View.data = [{'address': address.i2c_address, 'chip_pin': address.chip_pin_name,
+                                              'value': address.value} for address in lane.i2c_address_list]
+            i2c_screen.i2c_tabbed_panel.add_widget(new_tab)
 
         self.manager.current = "i2c_screen"
