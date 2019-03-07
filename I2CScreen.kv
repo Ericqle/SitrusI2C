@@ -66,6 +66,11 @@
                     # INSERT LOAD SCRIPT
                     root.dismiss()
 
+<I2cScriptRecycleViewRow@BoxLayout>:
+    orientation: 'horizontal'
+    Button:
+        text: 'Address'
+
 <I2cRunScriptPopup@Popup>:
     title: "Run Script"
     auto_dismiss: True
@@ -86,6 +91,13 @@
                 orientation: 'vertical'
 
                 RecycleView:
+                    viewclass: 'I2cScriptRecycleViewRow'
+                    RecycleBoxLayout:
+                        default_size: None, dp(56)
+                        default_size_hint: 1, None
+                        size_hint_y: None
+                        height: self.minimum_height
+                        orientation: 'vertical'
 
                 Button:
                     text: 'Cancel'
@@ -96,7 +108,7 @@
             BoxLayout:
                 orientation: 'vertical'
 
-                RecycleView:
+                RstDocument:
 
                 Button:
                     text: 'Run'
