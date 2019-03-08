@@ -3,6 +3,7 @@ from kivy.uix.tabbedpanel import TabbedPanelItem
 from kivy.lang import Builder
 import re
 import csv
+from pathlib import Path
 
 Builder.load_string('''
 <I2cRecycleViewRow@BoxLayout>:
@@ -112,6 +113,9 @@ class I2cLane:
                     temp_chip_pin = I2cChipPin(address)
                     temp_chip_pin.add_address(address)
 
+    def __eq__(self, name):
+        return self.name == name
+
     def get_i2c_address(self, address):
         for i2c_address in self.i2c_address_list:
             if i2c_address.i2c_address == address:
@@ -127,18 +131,16 @@ class MenuScreen(Screen):
     lane_list = list()
 
     def load_lane(self):
-        if self.loaded_lanes_label.text != '':
+        path = Path(self.config_file_text_input.text)
+        if re.split('/', self.config_file_text_input.text)[-1].rstrip('.csv') in self.lane_list:
+            print("same")
+        elif path.is_file():
             temp_lane = I2cLane(self.config_file_text_input.text)
             self.lane_list.append(temp_lane)
             self.loaded_lanes_label.text += (temp_lane.name + '\n')
 
     def swap_to_i2c_screen(self):
-
-        # self.load_lane('/Users/eric/Downloads/Athena A0 Test/Host_RX_01.csv')
-        # self.load_lane('/Users/eric/Downloads/Athena A0 Test/Host_RX_23.csv')
-
         i2c_screen = self.manager.get_screen("i2c_screen")
-
         i2c_screen.i2c_tabbed_panel.clear_widgets()
         i2c_screen.i2c_tabbed_panel.clear_tabs()
 

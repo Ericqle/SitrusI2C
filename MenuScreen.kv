@@ -1,6 +1,7 @@
 <MenuScreen>:
     id: menu_screen
     loaded_lanes_label: loaded_lanes_label
+    config_file_chooser: config_file_chooser
     config_file_text_input: config_file_text_input
 
     canvas.before:
@@ -16,15 +17,27 @@
         spacing: 25
 
         BoxLayout:
+            canvas.before:
+                Color:
+                    rgb: 160/255, 160/255, 160/255
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
             orientation: 'vertical'
             spacing: 5
             padding: 5
 
             TextInput:
                 id: config_file_text_input
+                text: config_file_chooser.selection and config_file_chooser.selection[0] or ''
                 size_hint: 1, .2
 
+            FileChooserListView:
+                id: config_file_chooser
+                path: '/users/eric/Downloads/'
+
             Button:
+                size_hint: 1, .2
                 text: 'Load Config'
                 on_press: root.load_lane()
 
