@@ -137,7 +137,7 @@ class MenuScreen(Screen):
         elif path.is_file():
             temp_lane = I2cLane(self.config_file_text_input.text)
             self.lane_list.append(temp_lane)
-            self.loaded_lanes_label.text += (temp_lane.name + '\n')
+            self.loaded_lanes_recycle_view.data = ({'text': lane.name} for lane in self.lane_list)
 
     def swap_to_i2c_screen(self):
         i2c_screen = self.manager.get_screen("i2c_screen")

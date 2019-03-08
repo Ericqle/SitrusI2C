@@ -1,14 +1,18 @@
-<ScrollableLabel@ScrollView>:
+<ConfigRecycleViewRow@Label>:
     text: ''
-    Label:
-        text_size: self.width, None
+
+<ConfigRecycleView@RecycleView>:
+    viewclass: 'ConfigRecycleViewRow'
+    RecycleBoxLayout:
+        default_size: None, dp(30)
+        default_size_hint: 1, None
         size_hint_y: None
-        height: self.texture_size[1]
-        text: root.text
+        height: self.minimum_height
+        orientation: 'vertical'
 
 <MenuScreen>:
     id: menu_screen
-    loaded_lanes_label: loaded_lanes_label
+    loaded_lanes_recycle_view: loaded_lanes_recycle_view
     config_file_chooser: config_file_chooser
     config_file_text_input: config_file_text_input
 
@@ -63,15 +67,8 @@
                 text: "Loaded Lanes"
                 size_hint: 1, .2
 
-            ScrollableLabel:
-                id: loaded_lanes_label
-                canvas.before:
-                    Color:
-                        rgb: 165/255, 165/255, 165/255
-                    Rectangle:
-                        pos: self.pos
-                        size: self.size
-                markup: 'True'
+            ConfigRecycleView:
+                id: loaded_lanes_recycle_view
                 size_hint: 1, .8
 
             Button:
