@@ -1,6 +1,9 @@
 from kivy.uix.screenmanager import Screen
 from kivy.uix.tabbedpanel import TabbedPanelItem
 from kivy.factory import Factory
+from pyftdi.i2c import I2cController, I2cNackError, I2cIOError, I2cTimeoutError
+from pyftdi.usbtools import UsbToolsError
+from usb.core import USBError
 
 
 class I2cTabbedPanelItem(TabbedPanelItem):
@@ -10,16 +13,39 @@ class I2cTabbedPanelItem(TabbedPanelItem):
 class I2CScreen(Screen):
 
     lane_list = list()
+    slave_device = None
 
     @staticmethod
     def write():
         Factory.I2cWritePopup().open()
 
-    def read(self):
-        pass
+    def read(self, address):
+        if self.slave_device is not None:
+            try:
+                address = int(address, 16)
+                reg_data = hex(self.slave_device.read_from(address, 1)[0])  # read
+                return reg_data
+            except I2cNackError:
+                print(I2cNackError)
+            except I2cIOError:
+                print(I2cIOError)
+            except I2cTimeoutError:
+                print(I2cTimeoutError)
+            return "Read_Fail"
+        else:
+            return 'Error'
 
-    def configure_ftdi(self):
-        pass
+    def configure_ftdi(self, port_address):
+        try:
+            i2c = I2cController()
+            i2c.configure('ftdi://ftdi:232h/1')
+            slave_device = i2c.get_port(int(port_address, 16))
+            slave_device.configure_register(bigendian=True, width=2)
+            self.slave_device = slave_device
+        except USBError:
+            print(USBError)
+        except UsbToolsError:
+            print(UsbToolsError)
 
     def configure_lane_tabs(self):
         self.i2c_tabbed_panel.clear_widgets()
@@ -28,7 +54,7 @@ class I2CScreen(Screen):
         for lane in self.lane_list:
             new_tab = I2cTabbedPanelItem(text=lane.name)
             new_tab.i2c_recycle_View.data = [{'address': address.i2c_address, 'chip_pin': address.chip_pin_name,
-                                              'value': address.value} for address in lane.i2c_address_list]
+                                              'value': self.read(address.i2c_address)} for address in lane.i2c_address_list]
             self.i2c_tabbed_panel.add_widget(new_tab)
         pass
 

@@ -137,8 +137,8 @@ class MenuScreen(Screen):
     def swap_to_i2c_screen(self):
         i2c_screen = self.manager.get_screen("i2c_screen")
         i2c_screen.lane_list = self.lane_list
+        i2c_screen.configure_ftdi(port_address='0x61')
         i2c_screen.configure_lane_tabs()
-        i2c_screen.configure_ftdi()
         # i2c_screen.i2c_tabbed_panel.clear_widgets()
         # i2c_screen.i2c_tabbed_panel.clear_tabs()
         #
