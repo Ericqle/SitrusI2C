@@ -13,7 +13,7 @@ Builder.load_string('''
     value: ''
     Button:
         text: root.address
-        on_press: app.root.get_screen("i2c_screen").show_details()
+        on_press: app.root.get_screen("i2c_screen").show_details(root.address)
     Label:
         text: root.chip_pin
     Button:

@@ -8,8 +8,16 @@ class I2CScreen(Screen):
     def write():
         Factory.I2cWritePopup().open()
 
-    def show_details(self):
-        # self.address_details_rst.text = address_list.bits_string + '\n' + chip_pin_list.breakdown
+    def show_details(self, address):
+        current_lane_name = self.i2c_tabbed_panel.get_current_tab().text
+        lane_list = self.manager.get_screen("menu_screen").lane_list
+
+        for lane in lane_list:
+            if current_lane_name == lane.name:
+                for i2c_address in lane.i2c_address_list:
+                    if address == i2c_address.i2c_address:
+                        self.address_details_rst.text = i2c_address.bits_string
+                        print(i2c_address.bits_string)
         pass
 
     @staticmethod
