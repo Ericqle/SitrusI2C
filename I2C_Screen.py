@@ -26,11 +26,11 @@ class I2CScreen(Screen):
                 reg_data = hex(self.slave_device.read_from(address, 1)[0])  # read
                 return reg_data
             except I2cNackError:
-                print(I2cNackError)
+                pass
             except I2cIOError:
-                print(I2cIOError)
+                pass
             except I2cTimeoutError:
-                print(I2cTimeoutError)
+                pass
             return "Read_Fail"
         else:
             return 'Error'
@@ -43,9 +43,13 @@ class I2CScreen(Screen):
             slave_device.configure_register(bigendian=True, width=2)
             self.slave_device = slave_device
         except USBError:
-            print(USBError)
+            usb_error = Factory.ErrorPopup()
+            usb_error.text = str(USBError)
+            usb_error.open()
         except UsbToolsError:
-            print(UsbToolsError)
+            usb_tool_error = Factory.ErrorPopup()
+            usb_tool_error.text = str(UsbToolsError)
+            usb_tool_error.open()
 
     def configure_lane_tabs(self):
         self.i2c_tabbed_panel.clear_widgets()
@@ -54,7 +58,8 @@ class I2CScreen(Screen):
         for lane in self.lane_list:
             new_tab = I2cTabbedPanelItem(text=lane.name)
             new_tab.i2c_recycle_View.data = [{'address': address.i2c_address, 'chip_pin': address.chip_pin_name,
-                                              'value': self.read(address.i2c_address)} for address in lane.i2c_address_list]
+                                              'value': self.read(address.i2c_address)}
+                                             for address in lane.i2c_address_list]
             self.i2c_tabbed_panel.add_widget(new_tab)
         pass
 
