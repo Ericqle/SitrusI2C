@@ -117,11 +117,25 @@
                         # INSERT LOAD SCRIPT
                         root.dismiss()
 
+<BitRecycleViewRow@Label>:
+    text: ''
+    text_size: self.width, None
+    size_hint: 1, None
+    #height: self.texture_size[1]
+
+<BitRecycleView@RecycleView>:
+    viewclass: 'BitRecycleViewRow'
+    RecycleBoxLayout:
+        default_size: None, dp(30)
+        default_size_hint: 1, None
+        size_hint_y: None
+        height: self.minimum_height
+        orientation: 'vertical'
 
 <I2CScreen>:
     id: i2c_screen
     i2c_tabbed_panel: i2c_tabbed_panel
-    address_details_rst: address_details_rst
+    bit_recycle_view: bit_recycle_view
 
     canvas.before:
         Color:
@@ -166,6 +180,6 @@
             id: i2c_tabbed_panel
             do_default_tab: False
 
-        TextInput:
-            id: address_details_rst
-            size_hint: 1, .5
+        BitRecycleView:
+            id: bit_recycle_view
+

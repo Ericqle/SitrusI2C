@@ -16,9 +16,7 @@ class I2CScreen(Screen):
             if current_lane_name == lane.name:
                 for i2c_address in lane.i2c_address_list:
                     if address == i2c_address.i2c_address:
-                        self.address_details_rst.text = i2c_address.bits_string
-                        print(i2c_address.bits_string)
-        pass
+                        self.bit_recycle_view.data = ({'text': bit} for bit in i2c_address.bits)
 
     @staticmethod
     def open_load_script():
