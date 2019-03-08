@@ -1,5 +1,7 @@
 <MenuScreen>:
     id: menu_screen
+    loaded_lanes_label: loaded_lanes_label
+    config_file_text_input: config_file_text_input
 
     canvas.before:
         Color:
@@ -19,18 +21,34 @@
             padding: 5
 
             TextInput:
+                id: config_file_text_input
                 size_hint: 1, .2
 
             Button:
                 text: 'Load Config'
+                on_press: root.load_lane()
 
         BoxLayout:
             orientation: 'vertical'
 
             Label:
-                text: "Available Ports"
+                canvas.before:
+                    Color:
+                        rgb: 165/255, 165/255, 165/255
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+                font_size: '16sp'
+                text: "Loaded Lanes"
                 size_hint: 1, .2
 
+            Label:
+                markup: 'True'
+                font_size: '16sp'
+                text: ''
+                id: loaded_lanes_label
+
             Button:
-                text: 'test'
+                size_hint: 1, .2
+                text: 'Continue'
                 on_press: root.swap_to_i2c_screen()

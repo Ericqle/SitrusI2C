@@ -126,15 +126,16 @@ class I2cTabbedPanelItem(TabbedPanelItem):
 class MenuScreen(Screen):
     lane_list = list()
 
-    def load_lanes(self, config_files):
-        for config_file in config_files:
-            temp_lane = I2cLane(config_file)
+    def load_lane(self):
+        if self.loaded_lanes_label.text != '':
+            temp_lane = I2cLane(self.config_file_text_input.text)
             self.lane_list.append(temp_lane)
+            self.loaded_lanes_label.text += (temp_lane.name + '\n')
 
     def swap_to_i2c_screen(self):
 
-        self.load_lanes(['/Users/eric/Downloads/Athena A0 Test/Host_RX_01.csv',
-                         '/Users/eric/Downloads/Athena A0 Test/Host_RX_23.csv'])
+        # self.load_lane('/Users/eric/Downloads/Athena A0 Test/Host_RX_01.csv')
+        # self.load_lane('/Users/eric/Downloads/Athena A0 Test/Host_RX_23.csv')
 
         i2c_screen = self.manager.get_screen("i2c_screen")
 

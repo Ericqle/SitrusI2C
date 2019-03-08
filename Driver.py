@@ -19,6 +19,6 @@ class SitrusI2cApp(App):
 
 
 if __name__ == '__main__':
-    Window.size = (850, 475)
+    Window.size = (850, 500)
     Config.set('input', 'mouse', 'mouse,multitouch_on_demand')
     SitrusI2cApp().run()
