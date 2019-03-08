@@ -1,5 +1,4 @@
 from kivy.uix.screenmanager import Screen
-from kivy.uix.tabbedpanel import TabbedPanelItem
 from kivy.lang import Builder
 import re
 import csv
@@ -123,10 +122,6 @@ class I2cLane:
         return None
 
 
-class I2cTabbedPanelItem(TabbedPanelItem):
-    pass
-
-
 class MenuScreen(Screen):
     lane_list = list()
 
@@ -141,13 +136,15 @@ class MenuScreen(Screen):
 
     def swap_to_i2c_screen(self):
         i2c_screen = self.manager.get_screen("i2c_screen")
-        i2c_screen.i2c_tabbed_panel.clear_widgets()
-        i2c_screen.i2c_tabbed_panel.clear_tabs()
-
-        for lane in self.lane_list:
-            new_tab = I2cTabbedPanelItem(text=lane.name)
-            new_tab.i2c_recycle_View.data = [{'address': address.i2c_address, 'chip_pin': address.chip_pin_name,
-                                              'value': address.value} for address in lane.i2c_address_list]
-            i2c_screen.i2c_tabbed_panel.add_widget(new_tab)
-
+        i2c_screen.lane_list = self.lane_list
+        i2c_screen.configure_lane_tabs()
+        i2c_screen.configure_ftdi()
+        # i2c_screen.i2c_tabbed_panel.clear_widgets()
+        # i2c_screen.i2c_tabbed_panel.clear_tabs()
+        #
+        # for lane in self.lane_list:
+        #     new_tab = I2cTabbedPanelItem(text=lane.name)
+        #     new_tab.i2c_recycle_View.data = [{'address': address.i2c_address, 'chip_pin': address.chip_pin_name,
+        #                                       'value': address.value} for address in lane.i2c_address_list]
+        #     i2c_screen.i2c_tabbed_panel.add_widget(new_tab)
         self.manager.current = "i2c_screen"
