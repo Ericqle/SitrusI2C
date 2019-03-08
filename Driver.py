@@ -8,6 +8,7 @@ from I2C_Screen import I2CScreen
 
 class SitrusI2cApp(App):
     from kivy.lang import Builder
+    Builder.load_file('Popups.kv')
     Builder.load_file('MenuScreen.kv')
     Builder.load_file('I2CScreen.kv')
 

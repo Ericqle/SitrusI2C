@@ -1,0 +1,14 @@
+<ErrorPopup@Popup>:
+    title: "Error"
+    text: ''
+    size_hint: .7, .5
+    auto_dismiss: False
+    BoxLayout:
+        orientation: 'vertical'
+        Label:
+            font_size: '16sp'
+            text: root.text
+        Button:
+            text: 'Okay'
+            on_release: root.dismiss()
+            size_hint: 1, .50
