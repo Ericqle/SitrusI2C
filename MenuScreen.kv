@@ -1,3 +1,11 @@
+<ScrollableLabel@ScrollView>:
+    text: ''
+    Label:
+        text_size: self.width, None
+        size_hint_y: None
+        height: self.texture_size[1]
+        text: root.text
+
 <MenuScreen>:
     id: menu_screen
     loaded_lanes_label: loaded_lanes_label
@@ -47,7 +55,7 @@
             Label:
                 canvas.before:
                     Color:
-                        rgb: 165/255, 165/255, 165/255
+                        rgb: 160/255, 160/255, 160/255
                     Rectangle:
                         pos: self.pos
                         size: self.size
@@ -55,11 +63,16 @@
                 text: "Loaded Lanes"
                 size_hint: 1, .2
 
-            Label:
-                markup: 'True'
-                font_size: '16sp'
-                text: ''
+            ScrollableLabel:
                 id: loaded_lanes_label
+                canvas.before:
+                    Color:
+                        rgb: 165/255, 165/255, 165/255
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+                markup: 'True'
+                size_hint: 1, .8
 
             Button:
                 size_hint: 1, .2
