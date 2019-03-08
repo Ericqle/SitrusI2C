@@ -4,6 +4,12 @@
     auto_dismiss: False
 
     BoxLayout:
+        canvas.before:
+            Color:
+                rgb: 175/255, 175/255, 175/255
+            Rectangle:
+                pos: self.pos
+                size: self.size
         orientation: 'vertical'
 
         BoxLayout:
@@ -37,6 +43,12 @@
     size_hint: .75, 1
 
     BoxLayout:
+        canvas.before:
+            Color:
+                rgb: 175/255, 175/255, 175/255
+            Rectangle:
+                pos: self.pos
+                size: self.size
         orientation: 'vertical'
         spacing: 25
         padding: 25
@@ -77,6 +89,12 @@
     size_hint: .75, 1
 
     BoxLayout:
+        canvas.before:
+            Color:
+                rgb: 175/255, 175/255, 175/255
+            Rectangle:
+                pos: self.pos
+                size: self.size
         orientation: 'vertical'
         spacing: 25
         padding: 25
@@ -148,6 +166,12 @@
         pos_hint: {'top':1}
         size_hint_y: .075
         ActionView:
+            canvas.before:
+                Color:
+                    rgb: 150/255, 150/255, 150/255
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
             use_separator: True
 
             ActionPrevious:

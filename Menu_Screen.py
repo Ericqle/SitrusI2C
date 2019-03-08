@@ -6,6 +6,12 @@ from pathlib import Path
 
 Builder.load_string('''
 <I2cRecycleViewRow@BoxLayout>:
+    canvas.before:
+        Color:
+            rgb: 185/255, 185/255, 185/255
+        Rectangle:
+            pos: self.pos
+            size: self.size
     orientation: 'horizontal'
     address: ''
     chip_pin: ''
