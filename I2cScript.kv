@@ -36,18 +36,20 @@
             Button:
                 text: 'Load'
                 on_press:
-                    # INSERT LOAD SCRIPT
+                    app.root.get_screen("i2c_screen").load_script(script_file_text_input.text)
                     root.dismiss()
 
 <I2cScriptRecycleViewRow@BoxLayout>:
     orientation: 'horizontal'
+    script_name: ''
     Button:
-        text: 'Address'
+        text: root.script_name
 
 <I2cRunScriptPopup@Popup>:
     title: "Run Script"
     auto_dismiss: True
     size_hint: .75, 1
+    scripts_recycle_view: scripts_recycle_view
 
     BoxLayout:
         canvas.before:
@@ -70,6 +72,7 @@
                 orientation: 'vertical'
 
                 RecycleView:
+                    id: scripts_recycle_view
                     viewclass: 'I2cScriptRecycleViewRow'
                     RecycleBoxLayout:
                         default_size: None, dp(56)

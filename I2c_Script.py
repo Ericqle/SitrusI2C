@@ -8,6 +8,9 @@ class I2cScript:
         self.script_name = script_name
         self.commands = commands  # list or array of read in script lines
 
+    def __eq__(self, script_name):
+        return script_name == self.script_name
+
     def get_preview(self):
         preview = "Script: \n"
         for command in self.commands:

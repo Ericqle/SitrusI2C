@@ -4,7 +4,15 @@ from kivy.factory import Factory
 from pyftdi.i2c import I2cController, I2cNackError, I2cIOError, I2cTimeoutError
 from pyftdi.usbtools import UsbToolsError
 from usb.core import USBError
+from I2c_Script import I2cScript
+import ntpath
 import re
+ntpath.basename("a/b/c")
+
+
+def path_leaf(path):
+    head, tail = ntpath.split(path)
+    return tail or ntpath.basename(head)
 
 
 class I2cTabbedPanelItem(TabbedPanelItem):
@@ -12,7 +20,7 @@ class I2cTabbedPanelItem(TabbedPanelItem):
 
 
 class I2CScreen(Screen):
-
+    script_list = list()
     lane_list = list()
     slave_device = None
 
@@ -113,13 +121,19 @@ class I2CScreen(Screen):
                                                       'value': address.value, 'default': address.default}
                                                      for address in lane.i2c_address_list]
 
+    def load_script(self, file_path):
+        if path_leaf(file_path) in self.script_list:
+            pass
+        elif file_path.__contains__(".txt"):
+            file = open(file_path, 'r')
+            self.script_list.append(I2cScript(path_leaf(file_path), file.readlines()))
 
     @staticmethod
     def open_load_script():
         Factory.I2cLoadScriptPopup().open()
 
-    @staticmethod
-    def open_run_script():
-        Factory.I2cRunScriptPopup().open()
-        pass
+    def open_run_script(self):
+        run_script_popup = Factory.I2cRunScriptPopup()
+        run_script_popup.scripts_recycle_view.data = [{'script_name': script.script_name} for script in self.script_list]
+        run_script_popup.open()
 
