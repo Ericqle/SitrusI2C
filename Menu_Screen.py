@@ -16,14 +16,23 @@ Builder.load_string('''
     address: ''
     chip_pin: ''
     value: ''
+    default: ''
     Button:
         text: root.address
         on_press: app.root.get_screen("i2c_screen").show_details(root.address)
     Label:
         text: root.chip_pin
+    Label: 
+        canvas.before:
+            Color:
+                rgb: 150/255, 150/255, 150/255
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        text: root.default
     Button:
         text: root.value
-        on_press: app.root.get_screen("i2c_screen").write()
+        on_press: app.root.get_screen("i2c_screen").open_write_prompt(root.address)
 
 <I2cRecycleView@RecycleView>:
     viewclass: 'I2cRecycleViewRow'
@@ -134,7 +143,7 @@ class MenuScreen(Screen):
     def load_lane(self):
         path = Path(self.config_file_text_input.text)
         if re.split('/', self.config_file_text_input.text)[-1].rstrip('.csv') in self.lane_list:
-            print("same")
+            pass
         elif path.is_file():
             temp_lane = I2cLane(self.config_file_text_input.text)
             self.lane_list.append(temp_lane)

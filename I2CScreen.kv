@@ -2,6 +2,8 @@
     title: "Write"
     size_hint: .5, .35
     auto_dismiss: False
+    value_text_input: value_text_input
+    address: ''
 
     BoxLayout:
         canvas.before:
@@ -21,6 +23,7 @@
                 text: 'Data(HEX): '
 
             TextInput:
+                id: value_text_input
 
         BoxLayout:
             orientation: 'horizontal'
@@ -34,7 +37,7 @@
             Button:
                 text: 'Write'
                 on_press:
-                    # INSERT WRITE FUNCTION
+                    app.root.get_screen("i2c_screen").write(root.address ,value_text_input.text)
                     root.dismiss()
 
 <I2cLoadScriptPopup@Popup>:
@@ -206,4 +209,5 @@
 
         BitRecycleView:
             id: bit_recycle_view
+            size_hint: 1, .45
 
