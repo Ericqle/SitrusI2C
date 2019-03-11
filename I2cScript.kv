@@ -1,0 +1,97 @@
+<I2cLoadScriptPopup@Popup>:
+    title: "Load Script"
+    auto_dismiss: True
+    size_hint: .6, .8
+
+    BoxLayout:
+        canvas.before:
+            Color:
+                rgb: 150/255, 150/255, 150/255
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        orientation: 'vertical'
+        spacing: 25
+        padding: 25
+
+        TextInput:
+            id: script_file_text_input
+            text: script_file_chooser.selection and script_file_chooser.selection[0] or ''
+            size_hint: 1, .2
+
+        FileChooserListView:
+            id: script_file_chooser
+            path: '/users/eric/Desktop/'
+
+        BoxLayout:
+            orientation: 'horizontal'
+            padding: 5
+            spacing: 5
+            size_hint: 1, .2
+
+            Button:
+                text: 'Cancel'
+                on_press:
+                    root.dismiss()
+            Button:
+                text: 'Load'
+                on_press:
+                    # INSERT LOAD SCRIPT
+                    root.dismiss()
+
+<I2cScriptRecycleViewRow@BoxLayout>:
+    orientation: 'horizontal'
+    Button:
+        text: 'Address'
+
+<I2cRunScriptPopup@Popup>:
+    title: "Run Script"
+    auto_dismiss: True
+    size_hint: .75, 1
+
+    BoxLayout:
+        canvas.before:
+            Color:
+                rgb: 175/255, 175/255, 175/255
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        orientation: 'vertical'
+        spacing: 25
+        padding: 25
+
+        BoxLayout:
+            orientation: 'horizontal'
+            padding: 5
+            spacing: 5
+            size_hint: 1, .2
+
+            BoxLayout:
+                orientation: 'vertical'
+
+                RecycleView:
+                    viewclass: 'I2cScriptRecycleViewRow'
+                    RecycleBoxLayout:
+                        default_size: None, dp(56)
+                        default_size_hint: 1, None
+                        size_hint_y: None
+                        height: self.minimum_height
+                        orientation: 'vertical'
+
+                Button:
+                    text: 'Cancel'
+                    size_hint: 1, .25
+                    on_press:
+                        root.dismiss()
+
+            BoxLayout:
+                orientation: 'vertical'
+
+                RstDocument:
+
+                Button:
+                    text: 'Run'
+                    size_hint: 1, .25
+                    on_press:
+                        # INSERT LOAD SCRIPT
+                        root.dismiss()
