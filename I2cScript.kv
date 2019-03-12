@@ -1,7 +1,7 @@
 <I2cLoadScriptPopup@Popup>:
     title: "Load Script"
     auto_dismiss: True
-    size_hint: .6, .8
+    size_hint: .8, 1
 
     BoxLayout:
         canvas.before:
@@ -42,14 +42,20 @@
 <I2cScriptRecycleViewRow@BoxLayout>:
     orientation: 'horizontal'
     script_name: ''
+    script_preview: ''
     Button:
         text: root.script_name
+        on_press: app.root.get_screen("i2c_screen").show_script_preview(root.script_name, root.script_preview)
 
 <I2cRunScriptPopup@Popup>:
+    id: run_script_popup
     title: "Run Script"
     auto_dismiss: True
     size_hint: .75, 1
     scripts_recycle_view: scripts_recycle_view
+    script_preview_text_input: script_preview_text_input
+    script_progress_bar: script_progress_bar
+    currently_selected_script: ''
 
     BoxLayout:
         canvas.before:
@@ -59,42 +65,46 @@
                 pos: self.pos
                 size: self.size
         orientation: 'vertical'
-        spacing: 25
-        padding: 25
+        spacing: 5
+        padding: 5
 
         BoxLayout:
             orientation: 'horizontal'
-            padding: 5
-            spacing: 5
-            size_hint: 1, .2
 
-            BoxLayout:
-                orientation: 'vertical'
+            RecycleView:
+                id: scripts_recycle_view
+                viewclass: 'I2cScriptRecycleViewRow'
+                RecycleBoxLayout:
+                    default_size: None, dp(56)
+                    default_size_hint: 1, None
+                    size_hint_y: None
+                    height: self.minimum_height
+                    orientation: 'vertical'
 
-                RecycleView:
-                    id: scripts_recycle_view
-                    viewclass: 'I2cScriptRecycleViewRow'
-                    RecycleBoxLayout:
-                        default_size: None, dp(56)
-                        default_size_hint: 1, None
-                        size_hint_y: None
-                        height: self.minimum_height
-                        orientation: 'vertical'
+            TextInput:
+                id: script_preview_text_input
 
-                Button:
-                    text: 'Cancel'
-                    size_hint: 1, .25
-                    on_press:
-                        root.dismiss()
+        ProgressBar:
+            id: script_progress_bar
+            size_hint: 1, .1
+            max: 1000
 
-            BoxLayout:
-                orientation: 'vertical'
+        Label:
+            id: log_text_input
+            size_hint: 1, .1
+            text: ''
 
-                RstDocument:
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint: 1, .1
 
-                Button:
-                    text: 'Run'
-                    size_hint: 1, .25
-                    on_press:
-                        # INSERT LOAD SCRIPT
-                        root.dismiss()
+            Button:
+                text: 'Cancel'
+                on_press:
+                    root.dismiss()
+
+            Button:
+                text: 'Run'
+                on_press:
+                    app.root.get_screen("i2c_screen").run_script()
+                    root.dismiss()

@@ -23,6 +23,7 @@ class I2CScreen(Screen):
     script_list = list()
     lane_list = list()
     slave_device = None
+    script_pop_up_reference = None
 
     @staticmethod
     def open_write_prompt(address):
@@ -57,6 +58,7 @@ class I2CScreen(Screen):
                     pass
 
     def read(self, address):
+        print(self.script_pop_up_reference)
         if self.slave_device is not None:
             try:
                 address = int(address, 16)
@@ -128,12 +130,24 @@ class I2CScreen(Screen):
             file = open(file_path, 'r')
             self.script_list.append(I2cScript(path_leaf(file_path), file.readlines()))
 
+    def show_script_preview(self, script_name, preview):
+        self.script_pop_up_reference.currently_selected_script = script_name
+        self.script_pop_up_reference.script_preview_text_input.text = preview
+
+    def run_script(self):
+        for script in self.script_list:
+            if script.script_name == self.script_pop_up_reference.currently_selected_script:
+                # script.execute(self.slave_device, )
+                pass
+
     @staticmethod
     def open_load_script():
         Factory.I2cLoadScriptPopup().open()
 
     def open_run_script(self):
-        run_script_popup = Factory.I2cRunScriptPopup()
-        run_script_popup.scripts_recycle_view.data = [{'script_name': script.script_name} for script in self.script_list]
-        run_script_popup.open()
+        self.script_pop_up_reference = Factory.I2cRunScriptPopup()
+        self.script_pop_up_reference.scripts_recycle_view.data = [{'script_name': script.script_name,
+                                                                   'script_preview': script.get_preview()}
+                                                                  for script in self.script_list]
+        self.script_pop_up_reference.open()
 
