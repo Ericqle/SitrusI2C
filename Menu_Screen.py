@@ -3,6 +3,14 @@ from kivy.lang import Builder
 import re
 import csv
 from pathlib import Path
+import ntpath
+ntpath.basename("a/b/c")
+
+
+def path_leaf(path):
+    head, tail = ntpath.split(path)
+    return tail or ntpath.basename(head)
+
 
 Builder.load_string('''
 <I2cRecycleViewRow@BoxLayout>:
@@ -97,7 +105,7 @@ class I2cAddress:
 class I2cLane:
 
     def __init__(self, file):
-        self.name = re.split('/', file)[-1].rstrip('.csv')
+        self.name = path_leaf(file).strip('.csv')
         self.i2c_address_list = list()
         self.chip_pin_list = list()
         with open(file) as csv_file:
@@ -142,7 +150,7 @@ class MenuScreen(Screen):
 
     def load_lane(self):
         path = Path(self.config_file_text_input.text)
-        if re.split('/', self.config_file_text_input.text)[-1].rstrip('.csv') in self.lane_list:
+        if path_leaf(self.config_file_text_input.text).strip('.csv') in self.lane_list:
             pass
         elif path.is_file():
             temp_lane = I2cLane(self.config_file_text_input.text)
