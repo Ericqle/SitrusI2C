@@ -20,52 +20,43 @@ class I2cScript:
                 preview += ("Read " + command + "\n")
         return preview
 
-    def execute(self, slave, log_text_input, script_progress_bar):
-        run = Run(self.commands, slave, log_text_input, script_progress_bar)
+    def execute(self, slave, script_log_label, script_progress_bar):
+        run = Run(self.commands, slave, script_log_label, script_progress_bar)
         run.start()
 
 
 class Run(threading.Thread):
-    def __init__(self, commands, slave, log_text_input, script_progress_bar):
+    def __init__(self, commands, slave, script_log_label, script_progress_bar):
         super(Run, self).__init__()
         self.commands = commands
         self.slave = slave
-        self.log_text_input = log_text_input
+        self.script_log_label = script_log_label
         self.script_progress_bar = script_progress_bar
 
     def run(self):
         progress_segment = self.script_progress_bar.max / len(self.commands)
         try:
             for command in self.commands:
-                if command.__contains__(" "):
-                    address = int(command.split(", ")[0], 16)
-                    data = bytearray.fromhex(command.split(", ")[1].replace("0x", ""))
-                    self.slave.write_to(address, data)
-                    if int(hex(self.slave.read_from(address, 1)[0]), 16) == data[0]:
-                        self.log_text_input.insert_text(command.split(", ")[1]
-                                                        + " has been written to "
-                                                        + command.split(", ")[0]
-                                                        + "\n")
-                    else:
-                        self.log_text_input.insert_text("ERROR: "
-                                                        + command.split(", ")[1]
-                                                        + " could not be written to "
-                                                        + command.split(", ")[0]
-                                                        + "\n")
-                elif command.__contains__("rall"):
-                    print("read all")
-                elif command.__contains__("wdef"):
-                    print("write to default")
+                address = int(command.split(" ")[0], 16)
+                data = bytearray.fromhex(command.split(", ")[1].strip('0'))
+                self.slave.write_to(address, data)
+                if int(hex(self.slave.read_from(address, 1)[0]), 16) == data[0]:
+                    self.script_log_label.text = (command.split(", ")[1]
+                                                    + " has been written to "
+                                                    + command.split(", ")[0]
+                                                    + "\n")
                 else:
-                    address = int(command, 16)
-                    data = self.slave.read_from(address, 1)
-                    self.log_text_input.insert_text(command + " has been read. Data read: 0x" + str(data[0]) + "\n")
+                    self.script_log_label.text = ("ERROR: "
+                                                    + command.split(", ")[1]
+                                                    + " could not be written to "
+                                                    + command.split(", ")[0]
+                                                    + "\n")
                 self.script_progress_bar.value += progress_segment
-                time.sleep(1)
+                time.sleep(.5)
             self.script_progress_bar.value = 0
         except I2cNackError:
-            pass
+            print("1")
         except I2cIOError:
-            pass
+            print("2")
         except I2cTimeoutError:
-            pass
+            print("3")

@@ -55,6 +55,7 @@
     scripts_recycle_view: scripts_recycle_view
     script_preview_text_input: script_preview_text_input
     script_progress_bar: script_progress_bar
+    script_log_label: script_log_label
     currently_selected_script: ''
 
     BoxLayout:
@@ -90,7 +91,7 @@
             max: 1000
 
         Label:
-            id: log_text_input
+            id: script_log_label
             size_hint: 1, .1
             text: ''
 
@@ -99,7 +100,7 @@
             size_hint: 1, .1
 
             Button:
-                text: 'Cancel'
+                text: 'Close'
                 on_press:
                     root.dismiss()
 
@@ -107,4 +108,3 @@
                 text: 'Run'
                 on_press:
                     app.root.get_screen("i2c_screen").run_script()
-                    root.dismiss()
