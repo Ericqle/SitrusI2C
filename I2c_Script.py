@@ -16,8 +16,13 @@ class I2cScript:
         for command in self.commands:
             if command.__contains__(" "):
                 preview += ("Write " + command.split(" ")[1].strip('\n') + " to " + command.split(" ")[0] + "\n")
+            elif command.strip('\n').__contains__('0x'):
+                preview += ("Read " + command.strip('\n') + "\n")
+            elif command.strip('\n').isdigit():
+                preview += ("Wait " + command.strip('\n') + "ms\n")
             else:
-                preview += ("Read " + command + "\n")
+                print((command))
+                print("Error")
         return preview
 
     def execute(self, slave, script_log_label, script_progress_bar):
@@ -36,30 +41,50 @@ class Run(threading.Thread):
     def run(self):
         edited_addresses = list()
         progress_segment = self.script_progress_bar.max / len(self.commands)
-        try:
-            for command in self.commands:
-                address = int(command.split(" ")[0], 16)
-                data = bytearray.fromhex(command.split(" ")[1].strip('0'))
-                self.slave.write_to(address, data)
-                if int(hex(self.slave.read_from(address, 1)[0]), 16) == data[0]:
-                    edited_addresses.append(address)
-                    self.script_log_label.text = (command.split(" ")[1]
-                                                    + " has been written to "
-                                                    + command.split(" ")[0]
-                                                    + "\n")
-                else:
-                    self.script_log_label.text = ("ERROR: "
-                                                    + command.split(" ")[1]
-                                                    + " could not be written to "
-                                                    + command.split(" ")[0]
-                                                    + "\n")
+
+        for command in self.commands:
+            if command.__contains__(" "):
+                try:
+                    address = int(command.split(" ")[0], 16)
+                    data = bytearray.fromhex(command.split(" ")[1].strip('0'))
+                    self.slave.write_to(address, data)
+                    if int(hex(self.slave.read_from(address, 1)[0]), 16) == data[0]:
+                        edited_addresses.append(address)
+                        self.script_log_label.text = (command.split(" ")[1].strip('\n')
+                                                      + " has been written to "
+                                                      + command.split(" ")[0]
+                                                      + "\n")
+                    else:
+                        self.script_log_label.text = ("ERROR: "
+                                                      + command.split(" ")[1].strip('\n')
+                                                      + " could not be written to "
+                                                      + command.split(" ")[0]
+                                                      + "\n")
+                except I2cNackError:
+                    print("w1")
+                except I2cIOError:
+                    print("w1")
+                except I2cTimeoutError:
+                    print("w1")
                 self.script_progress_bar.value += progress_segment
-                time.sleep(.5)
-            self.script_log_label.text = "End Script"
-            self.script_progress_bar.value = 0
-        except I2cNackError:
-            pass
-        except I2cIOError:
-            pass
-        except I2cTimeoutError:
-            pass
+            elif command.strip('\n').__contains__('0x'):
+                try:
+                    address = int(command.strip('\n'), 16)
+                    reg_data = hex(self.slave.read_from(address, 1)[0])
+                    self.script_log_label.text = reg_data + " read from " + command.strip('\n')
+                    self.script_progress_bar.value += progress_segment
+                except I2cNackError:
+                    print("r1")
+                except I2cIOError:
+                    print("r1")
+                except I2cTimeoutError:
+                    print("r1")
+            elif command.strip('\n').isdigit():
+                time.sleep((int(command)/1000) % 60)
+                self.script_log_label.text = "Waiting..."
+                self.script_progress_bar.value += progress_segment
+            else:
+                print("Error")
+        self.script_log_label.text = "End Script"
+        self.script_progress_bar.value = 0
+
