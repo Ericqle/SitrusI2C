@@ -49,7 +49,9 @@ class I2CScreen(Screen):
                         self.slave_device.write_to(temp_address, data)  # write
                         self.show_details(address)  # read and refresh
                     else:
-                        print("ERROR: invalid input (must be a 2->4 digit hex value)" + "\n")
+                        format_error = Factory.ErrorPopup()
+                        format_error.text = "ERROR: invalid input (must be a 2->4 digit hex value)"
+                        format_error.open()
                 except I2cNackError:
                     pass
                 except I2cIOError:
@@ -112,22 +114,17 @@ class I2CScreen(Screen):
                         i2c_address.value = value # from read
                         self.bit_recycle_view.data = ({'text': bit} for bit in i2c_address.bits)
 
-    # def refresh_lane(self):
-    #     current_tab = self.i2c_tabbed_panel.current_tab
-    #
-    #     for lane in self.lane_list:
-    #         if current_tab.text == lane.name:
-    #             current_tab.i2c_recycle_View.data = [{'address': address.i2c_address,
-    #                                                   'chip_pin': address.chip_pin_name,
-    #                                                   'value': address.value, 'default': address.default}
-    #                                                  for address in lane.i2c_address_list]
-
     def open_read_lane(self):
-        read_lane_popup = Factory.ReadLanePopup()
-        read_lane_popup.lane_name = self.i2c_tabbed_panel.current_tab.text
-        for string in self.read_all_in_lane():
-            read_lane_popup.data += string + '\n'
-        read_lane_popup.open()
+        if self.slave_device is not None:
+            read_lane_popup = Factory.ReadLanePopup()
+            read_lane_popup.lane_name = self.i2c_tabbed_panel.current_tab.text
+            for string in self.read_all_in_lane():
+                read_lane_popup.data += string + '\n'
+            read_lane_popup.open()
+        else:
+            no_slave_error = Factory.ErrorPopup()
+            no_slave_error.text = "Error: No Save Device"
+            no_slave_error.open()
 
     def read_all_in_lane(self):
         strings = list()
@@ -162,9 +159,14 @@ class I2CScreen(Screen):
         Factory.I2cLoadScriptPopup().open()
 
     def open_run_script(self):
-        self.script_pop_up_reference = Factory.I2cRunScriptPopup()
-        self.script_pop_up_reference.scripts_recycle_view.data = [{'script_name': script.script_name,
-                                                                   'script_preview': script.get_preview()}
-                                                                  for script in self.script_list]
-        self.script_pop_up_reference.open()
+        if self.slave_device is not None:
+            self.script_pop_up_reference = Factory.I2cRunScriptPopup()
+            self.script_pop_up_reference.scripts_recycle_view.data = [{'script_name': script.script_name,
+                                                                       'script_preview': script.get_preview()}
+                                                                      for script in self.script_list]
+            self.script_pop_up_reference.open()
+        else:
+            no_slave_error = Factory.ErrorPopup()
+            no_slave_error.text = "Error: No Save Device"
+            no_slave_error.open()
 
