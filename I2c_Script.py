@@ -25,22 +25,24 @@ class I2cScript:
                 print("Error")
         return preview
 
-    def execute(self, slave, script_log_label, script_progress_bar):
-        run = Run(self.commands, slave, script_log_label, script_progress_bar)
+    def execute(self, slave, script_log_label, script_progress_bar, script_preview_text_input):
+        run = Run(self.commands, slave, script_log_label, script_progress_bar, script_preview_text_input)
         run.start()
 
 
 class Run(threading.Thread):
-    def __init__(self, commands, slave, script_log_label, script_progress_bar):
+    def __init__(self, commands, slave, script_log_label, script_progress_bar, script_preview_text_input):
         super(Run, self).__init__()
         self.commands = commands
         self.slave = slave
         self.script_log_label = script_log_label
         self.script_progress_bar = script_progress_bar
+        self.script_preview_text_input = script_preview_text_input
 
     def run(self):
         edited_addresses = list()
         progress_segment = self.script_progress_bar.max / len(self.commands)
+        self.script_preview_text_input.text = ''
 
         for command in self.commands:
             if command.__contains__(" "):
@@ -52,14 +54,12 @@ class Run(threading.Thread):
                         edited_addresses.append(address)
                         self.script_log_label.text = (command.split(" ")[1].strip('\n')
                                                       + " has been written to "
-                                                      + command.split(" ")[0]
-                                                      + "\n")
+                                                      + command.split(" ")[0])
                     else:
                         self.script_log_label.text = ("ERROR: "
                                                       + command.split(" ")[1].strip('\n')
                                                       + " could not be written to "
-                                                      + command.split(" ")[0]
-                                                      + "\n")
+                                                      + command.split(" ")[0])
                 except I2cNackError:
                     print("w1")
                 except I2cIOError:
@@ -84,7 +84,8 @@ class Run(threading.Thread):
                 self.script_log_label.text = "Waiting..."
                 self.script_progress_bar.value += progress_segment
             else:
-                print("Error")
+                self.script_preview_text_input.text = "Error"
+            self.script_preview_text_input.text += self.script_log_label.text + '\n'
         self.script_log_label.text = "End Script"
         self.script_progress_bar.value = 0
 

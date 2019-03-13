@@ -164,7 +164,8 @@ class I2CScreen(Screen):
             for script in self.script_list:
                 if script.script_name == self.script_pop_up_reference.currently_selected_script:
                     script.execute(self.slave_device, self.script_pop_up_reference.script_log_label,
-                                   self.script_pop_up_reference.script_progress_bar)
+                                   self.script_pop_up_reference.script_progress_bar,
+                                   self.script_pop_up_reference.script_preview_text_input)
 
     @staticmethod
     def open_load_script():
