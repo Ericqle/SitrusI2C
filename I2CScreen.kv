@@ -40,6 +40,32 @@
                     app.root.get_screen("i2c_screen").write(root.address ,value_text_input.text)
                     root.dismiss()
 
+<ReadLanePopup@Popup>
+    title: "Read Lane"
+    auto_dismiss: True
+    size_hint: .5, 1
+
+    lane_name: ''
+    data: ''
+
+    BoxLayout:
+        canvas.before:
+            Color:
+                rgb: 175/255, 175/255, 175/255
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        orientation: 'vertical'
+        spacing: 5
+        padding: 5
+
+        Label:
+            size_hint: 1, .2
+            text: root.lane_name
+
+        TextInput:
+            text: root.data
+
 <BitRecycleViewRow@Label>:
     text: ''
     text_size: self.width, None
@@ -82,6 +108,10 @@
             ActionPrevious:
                 title: 'I2C Tool'
                 with_previous: False
+
+            ActionButton:
+                text: "Read Lane"
+                on_press: i2c_screen.open_read_lane()
 
             ActionButton:
                 text: "Menu"

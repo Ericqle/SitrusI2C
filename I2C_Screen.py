@@ -112,14 +112,32 @@ class I2CScreen(Screen):
                         i2c_address.value = value # from read
                         self.bit_recycle_view.data = ({'text': bit} for bit in i2c_address.bits)
 
-    def refresh_lane(self):
-        current_tab = self.i2c_tabbed_panel.current_tab
+    # def refresh_lane(self):
+    #     current_tab = self.i2c_tabbed_panel.current_tab
+    #
+    #     for lane in self.lane_list:
+    #         if current_tab.text == lane.name:
+    #             current_tab.i2c_recycle_View.data = [{'address': address.i2c_address,
+    #                                                   'chip_pin': address.chip_pin_name,
+    #                                                   'value': address.value, 'default': address.default}
+    #                                                  for address in lane.i2c_address_list]
 
+    def open_read_lane(self):
+        read_lane_popup = Factory.ReadLanePopup()
+        read_lane_popup.lane_name = self.i2c_tabbed_panel.current_tab.text
+        for string in self.read_all_in_lane():
+            read_lane_popup.data += string + '\n'
+        read_lane_popup.open()
+
+    def read_all_in_lane(self):
+        strings = list()
+        current_tab = self.i2c_tabbed_panel.current_tab
         for lane in self.lane_list:
             if current_tab.text == lane.name:
-                current_tab.i2c_recycle_View.data = [{'address': address.i2c_address, 'chip_pin': address.chip_pin_name,
-                                                      'value': address.value, 'default': address.default}
-                                                     for address in lane.i2c_address_list]
+                for i2c_address in lane.i2c_address_list:
+                    string = i2c_address.i2c_address + ": " + self.read(i2c_address.i2c_address)
+                    strings.append(string)
+        return strings
 
     def load_script(self, file_path):
         if path_leaf(file_path) in self.script_list:
