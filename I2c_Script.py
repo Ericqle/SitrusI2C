@@ -6,7 +6,7 @@ import threading
 class I2cScript:
     def __init__(self, script_name, commands):
         self.script_name = script_name
-        self.commands = commands  # list or array of read in script lines
+        self.commands = commands
 
     def __eq__(self, script_name):
         return script_name == self.script_name
@@ -15,7 +15,7 @@ class I2cScript:
         preview = "Script: \n"
         for command in self.commands:
             if command.__contains__(" "):
-                preview += ("Write " + command.split(", ")[1] + " to " + command.split(", ")[0] + "\n")
+                preview += ("Write " + command.split(" ")[1].strip('\n') + " to " + command.split(" ")[0] + "\n")
             else:
                 preview += ("Read " + command + "\n")
         return preview
@@ -34,29 +34,32 @@ class Run(threading.Thread):
         self.script_progress_bar = script_progress_bar
 
     def run(self):
+        edited_addresses = list()
         progress_segment = self.script_progress_bar.max / len(self.commands)
         try:
             for command in self.commands:
                 address = int(command.split(" ")[0], 16)
-                data = bytearray.fromhex(command.split(", ")[1].strip('0'))
+                data = bytearray.fromhex(command.split(" ")[1].strip('0'))
                 self.slave.write_to(address, data)
                 if int(hex(self.slave.read_from(address, 1)[0]), 16) == data[0]:
-                    self.script_log_label.text = (command.split(", ")[1]
+                    edited_addresses.append(address)
+                    self.script_log_label.text = (command.split(" ")[1]
                                                     + " has been written to "
-                                                    + command.split(", ")[0]
+                                                    + command.split(" ")[0]
                                                     + "\n")
                 else:
                     self.script_log_label.text = ("ERROR: "
-                                                    + command.split(", ")[1]
+                                                    + command.split(" ")[1]
                                                     + " could not be written to "
-                                                    + command.split(", ")[0]
+                                                    + command.split(" ")[0]
                                                     + "\n")
                 self.script_progress_bar.value += progress_segment
                 time.sleep(.5)
+            self.script_log_label.text = "End Script"
             self.script_progress_bar.value = 0
         except I2cNackError:
-            print("1")
+            pass
         except I2cIOError:
-            print("2")
+            pass
         except I2cTimeoutError:
-            print("3")
+            pass

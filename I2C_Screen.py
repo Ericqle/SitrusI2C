@@ -58,7 +58,6 @@ class I2CScreen(Screen):
                     pass
 
     def read(self, address):
-        print(self.script_pop_up_reference)
         if self.slave_device is not None:
             try:
                 address = int(address, 16)
@@ -102,20 +101,19 @@ class I2CScreen(Screen):
             self.i2c_tabbed_panel.add_widget(new_tab)
         pass
 
-    def show_details(self, address):
-        current_lane_name = self.i2c_tabbed_panel.get_current_tab().text
+    def show_details(self, address, value):
+        current_lane_name = self.i2c_tabbed_panel.current_tab.text
 
         for lane in self.lane_list:
             if current_lane_name == lane.name:
 
                 for i2c_address in lane.i2c_address_list:
                     if address == i2c_address.i2c_address:
-                        i2c_address.value = self.read(i2c_address.i2c_address)  # read
+                        i2c_address.value = value # from read
                         self.bit_recycle_view.data = ({'text': bit} for bit in i2c_address.bits)
-                        self.refresh_lane()
 
     def refresh_lane(self):
-        current_tab = self.i2c_tabbed_panel.get_current_tab()
+        current_tab = self.i2c_tabbed_panel.current_tab
 
         for lane in self.lane_list:
             if current_tab.text == lane.name:
@@ -135,10 +133,11 @@ class I2CScreen(Screen):
         self.script_pop_up_reference.script_preview_text_input.text = preview
 
     def run_script(self):
-        for script in self.script_list:
-            if script.script_name == self.script_pop_up_reference.currently_selected_script:
-                script.execute(self.slave_device, self.script_pop_up_reference.script_log_label,
-                               self.script_pop_up_reference.script_progress_bar)
+        if self.slave_device is not None:
+            for script in self.script_list:
+                if script.script_name == self.script_pop_up_reference.currently_selected_script:
+                    script.execute(self.slave_device, self.script_pop_up_reference.script_log_label,
+                                   self.script_pop_up_reference.script_progress_bar)
 
     @staticmethod
     def open_load_script():
