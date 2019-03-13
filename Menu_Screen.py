@@ -154,7 +154,7 @@ class MenuScreen(Screen):
         path = Path(self.config_file_text_input.text)
         if path_leaf(self.config_file_text_input.text).strip('.csv') in self.lane_list:
             pass
-        elif path.is_file():
+        elif path.is_file() and self.config_file_text_input.text.endswith('.csv'):
             temp_lane = I2cLane(self.config_file_text_input.text)
             self.lane_list.append(temp_lane)
             self.loaded_lanes_recycle_view.data = ({'text': lane.name} for lane in self.lane_list)

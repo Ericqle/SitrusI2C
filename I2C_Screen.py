@@ -2,6 +2,7 @@ from kivy.uix.screenmanager import Screen
 from kivy.uix.tabbedpanel import TabbedPanelItem
 from kivy.factory import Factory
 from pyftdi.i2c import I2cController, I2cNackError, I2cIOError, I2cTimeoutError
+from pyftdi.ftdi import FtdiError
 from pyftdi.usbtools import UsbToolsError
 from usb.core import USBError
 from I2c_Script import I2cScript
@@ -52,6 +53,10 @@ class I2CScreen(Screen):
                         format_error = Factory.ErrorPopup()
                         format_error.text = "ERROR: invalid input (must be a 2->4 digit hex value)"
                         format_error.open()
+                except FtdiError:
+                    usb_slave_error = Factory.ErrorPopup()
+                    usb_slave_error.text = "Error: No usb device (it may have been disconnected)"
+                    usb_slave_error.open()
                 except I2cNackError:
                     pass
                 except I2cIOError:
@@ -65,6 +70,10 @@ class I2CScreen(Screen):
                 address = int(address, 16)
                 reg_data = hex(self.slave_device.read_from(address, 1)[0])  # read
                 return reg_data
+            except FtdiError:
+                usb_slave_error = Factory.ErrorPopup()
+                usb_slave_error.text = "Error: No usb device (it may have been disconnected)"
+                usb_slave_error.open()
             except I2cNackError:
                 pass
             except I2cIOError:
@@ -73,7 +82,10 @@ class I2CScreen(Screen):
                 pass
             return "Read_Fail"
         else:
-            return 'Error'
+            no_slave_error = Factory.ErrorPopup()
+            no_slave_error.text = "Error: No Save Device"
+            no_slave_error.open()
+            return ''
 
     def configure_ftdi(self, port_address):
         try:
@@ -111,7 +123,7 @@ class I2CScreen(Screen):
 
                 for i2c_address in lane.i2c_address_list:
                     if address == i2c_address.i2c_address:
-                        i2c_address.value = value # from read
+                        i2c_address.value = value  # from read
                         self.bit_recycle_view.data = ({'text': bit} for bit in i2c_address.bits)
 
     def open_read_lane(self):
