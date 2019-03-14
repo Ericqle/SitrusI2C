@@ -8,6 +8,7 @@ from usb.core import USBError
 from I2c_Script import I2cScript
 import ntpath
 import re
+import csv
 ntpath.basename("a/b/c")
 
 
@@ -159,9 +160,19 @@ class I2CScreen(Screen):
     def load_script(self, file_path):
         if path_leaf(file_path) in self.script_list:
             pass
-        elif file_path.__contains__(".txt"):
-            file = open(file_path, 'r')
-            self.script_list.append(I2cScript(path_leaf(file_path), file.readlines()))
+        elif file_path.__contains__(".csv"):
+            with open(file_path) as csv_file:
+                csv_reader = csv.reader(csv_file, delimiter=';')
+                commands = list()
+
+                for row in csv_reader:
+                    if 'write' in row:
+                        command_sequence = row.copy()[0: 4]
+                        commands.append(command_sequence)
+                    elif 'wait' in row:
+                        command_sequence = row.copy()[0: 2]
+                        commands.append(command_sequence)
+            self.script_list.append(I2cScript(path_leaf(file_path), commands))
 
     def show_script_preview(self, script_name, preview):
         self.script_pop_up_reference.currently_selected_script = script_name
