@@ -16,6 +16,7 @@
     loaded_lanes_recycle_view: loaded_lanes_recycle_view
     config_file_chooser: config_file_chooser
     config_file_text_input: config_file_text_input
+    port_address_text_input: port_address_text_input
 
     canvas.before:
         Color:
@@ -71,6 +72,19 @@
             ConfigRecycleView:
                 id: loaded_lanes_recycle_view
                 size_hint: 1, .8
+
+            BoxLayout:
+                orientation: 'horizontal'
+                size_hint: 1, .1
+
+                Label:
+                    text: "Port Address"
+
+                TextInput:
+                    id: port_address_text_input
+                    size_hint: .5, 1
+                    text: ''
+
 
             Button:
                 size_hint: 1, .2
