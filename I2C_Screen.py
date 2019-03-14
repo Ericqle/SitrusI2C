@@ -111,6 +111,10 @@ class I2CScreen(Screen):
             usb_tool_error = Factory.ErrorPopup()
             usb_tool_error.text = str(UsbToolsError)
             usb_tool_error.open()
+        except I2cIOError:
+            i2c_io_error = Factory.ErrorPopup()
+            i2c_io_error.text = str(I2cIOError)
+            i2c_io_error.open()
 
     def configure_lane_tabs(self):
         self.i2c_tabbed_panel.clear_widgets()
