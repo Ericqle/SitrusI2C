@@ -49,9 +49,11 @@ class Run(threading.Thread):
                         data = bytearray.fromhex(command[3].strip('0x'))
                         self.slave.write_to(address, data)
                         if int(hex(self.slave.read_from(address, 1)[0]), 16) == data[0]:
-                            self.script_log_label.text = "write success"
+                            self.script_log_label.text = (command[3] + " written to bit(s) " + command[2] + " in " +
+                                                          command[1])
                         else:
-                            self.script_log_label.text = "write fail"
+                            self.script_log_label.text = ("Failed to write " + command[3] + " to bit(s) " + command[2] +
+                                                          " in " + command[1])
 
                     elif re.compile('\\[.*:.*\\]').match(command[2]):
                         # Read
@@ -65,20 +67,22 @@ class Run(threading.Thread):
                         max = 7 - int(bit_range[1])
                         min = 7 - int(bit_range[3])
 
-                        if write_value.replace("0x", '').__len__() == 1:
-                            write_value = '0' + write_value
-
                         write_value = reg_data[:max] + value + reg_data[min + 1:]
                         write_value = hex(int(write_value, 2))
+
+                        if write_value.replace("0x", '').__len__() == 1:
+                            write_value = '0' + write_value
 
                         # write
                         data = bytearray.fromhex(write_value.replace("0x", ''))
                         self.slave.write_to(address, data)
 
                         if int(hex(self.slave.read_from(address, 1)[0]), 16) == data[0]:
-                            self.script_log_label.text = "write success"
+                            self.script_log_label.text = (command[3] + " written to bit(s) " + command[2] + " in " +
+                                                          command[1])
                         else:
-                            self.script_log_label.text = "write fail"
+                            self.script_log_label.text = ("Failed to write " + command[3] + " to bit(s) " + command[2] +
+                                                          " in " + command[1])
 
                     elif command[2].isdigit():
                         # Read
@@ -104,21 +108,23 @@ class Run(threading.Thread):
                         self.slave.write_to(address, data)
 
                         if int(hex(self.slave.read_from(address, 1)[0]), 16) == data[0]:
-                            self.script_log_label.text = "write success"
+                            self.script_log_label.text = (command[3] + " written to bit(s) " + command[2] + " in " +
+                                                          command[1])
                         else:
-                            self.script_log_label.text = "write fail"
+                            self.script_log_label.text = ("Failed to write " + command[3] + " to bit(s) " + command[2] +
+                                                          " in " + command[1])
 
                 except I2cNackError:
-                    print("w1")
+                    break
                 except I2cIOError:
-                    print("w1")
+                    break
                 except I2cTimeoutError:
-                    print("w1")
+                    break
                 self.script_progress_bar.value += progress_segment
 
             elif 'wait' in command:
                 time.sleep((int(command[1])/1000) % 60)
-                self.script_log_label.text = "Waiting..."
+                self.script_log_label.text = "Waiting " + command[1] + "ms"
                 self.script_progress_bar.value += progress_segment
 
             else:
