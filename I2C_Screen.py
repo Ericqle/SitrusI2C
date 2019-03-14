@@ -40,15 +40,23 @@ class I2CScreen(Screen):
         else:
             return True
 
+    @staticmethod
+    def get_valid_value_form(value):
+        if len(value) > 2:
+            value = value.strip('0')
+            return value
+        else:
+            return value
+
     def write(self, address, value):
         if self.slave_device is not None:
             if value != '':
                 try:
                     temp_address = int(address, 16)
                     if self.validate_input(value):
-                        data = bytearray.fromhex(value.strip('0'))
+                        data = bytearray.fromhex(self.get_valid_value_form(value))
                         self.slave_device.write_to(temp_address, data)  # write
-                        self.show_details(address)  # read and refresh
+                        self.show_details(address, self.read(address))  # read and refresh
                     else:
                         format_error = Factory.ErrorPopup()
                         format_error.text = "ERROR: invalid input (must be a 2->4 digit hex value)"
