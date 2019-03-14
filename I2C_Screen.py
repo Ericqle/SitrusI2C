@@ -125,7 +125,6 @@ class I2CScreen(Screen):
         pass
 
     def show_details(self, address, value):
-        print(value)
         current_lane_name = self.i2c_tabbed_panel.current_tab.text
 
         for lane in self.lane_list:
