@@ -45,18 +45,69 @@ class Run(threading.Thread):
             if 'write' in command:
                 try:
                     if command[2] == '[7:0]':
-                        self.script_log_label.text = "full write"
-                        # address = int(command[1], 16)
-                        # data = bytearray.fromhex(command[3].strip('0x'))
-                        # self.slave.write_to(address, data)
-                        # if int(hex(self.slave.read_from(address, 1)[0]), 16) == data[0]:
-                        #     self.script_log_label.text = "write success"
-                        # else:
-                        #     self.script_log_label.text = "write fail"
+                        address = int(command[1], 16)
+                        data = bytearray.fromhex(command[3].strip('0x'))
+                        self.slave.write_to(address, data)
+                        if int(hex(self.slave.read_from(address, 1)[0]), 16) == data[0]:
+                            self.script_log_label.text = "write success"
+                        else:
+                            self.script_log_label.text = "write fail"
+
                     elif re.compile('\\[.*:.*\\]').match(command[2]):
-                        self.script_log_label.text = "partial write"
+                        # Read
+                        address = int(command[1], 16)
+                        reg_data = '{0:08b}'.format(self.slave.read_from(address, 1)[0])
+
+                        # Make Write Value
+                        bit_range = command[2]
+                        value = command[3]
+
+                        max = 7 - int(bit_range[1])
+                        min = 7 - int(bit_range[3])
+
+                        if write_value.replace("0x", '').__len__() == 1:
+                            write_value = '0' + write_value
+
+                        write_value = reg_data[:max] + value + reg_data[min + 1:]
+                        write_value = hex(int(write_value, 2))
+
+                        # write
+                        data = bytearray.fromhex(write_value.replace("0x", ''))
+                        self.slave.write_to(address, data)
+
+                        if int(hex(self.slave.read_from(address, 1)[0]), 16) == data[0]:
+                            self.script_log_label.text = "write success"
+                        else:
+                            self.script_log_label.text = "write fail"
+
                     elif command[2].isdigit():
-                        self.script_log_label.text = "bit write"
+                        # Read
+                        address = int(command[1], 16)
+                        reg_data = '{0:08b}'.format(self.slave.read_from(address, 1)[0])
+
+                        # Make Write Value
+                        bit_range = command[2]
+                        value = command[3]
+
+                        bit_location = 7 - int(bit_range)
+
+                        temp_reg_data = list(reg_data)
+                        temp_reg_data[bit_location] = value
+                        write_value = "".join(temp_reg_data)
+                        write_value = hex(int(write_value, 2))
+
+                        if write_value.replace("0x", '').__len__() == 1:
+                            write_value = '0' + write_value
+
+                        # write
+                        data = bytearray.fromhex(write_value.replace("0x", ''))
+                        self.slave.write_to(address, data)
+
+                        if int(hex(self.slave.read_from(address, 1)[0]), 16) == data[0]:
+                            self.script_log_label.text = "write success"
+                        else:
+                            self.script_log_label.text = "write fail"
+
                 except I2cNackError:
                     print("w1")
                 except I2cIOError:
@@ -64,13 +115,17 @@ class Run(threading.Thread):
                 except I2cTimeoutError:
                     print("w1")
                 self.script_progress_bar.value += progress_segment
+
             elif 'wait' in command:
                 time.sleep((int(command[1])/1000) % 60)
                 self.script_log_label.text = "Waiting..."
                 self.script_progress_bar.value += progress_segment
+
             else:
                 self.script_preview_text_input.text = "Error"
+
             self.script_preview_text_input.text += self.script_log_label.text + '\n'
+
         self.script_log_label.text = "End Script"
         self.script_progress_bar.value = 0
 
