@@ -150,6 +150,10 @@ class I2cLane:
 class MenuScreen(Screen):
     lane_list = list()
 
+    @staticmethod
+    def get_default_path():
+        return str(Path.home())
+
     def load_lane(self):
         path = Path(self.config_file_text_input.text)
         if path_leaf(self.config_file_text_input.text).strip('.csv') in self.lane_list:
