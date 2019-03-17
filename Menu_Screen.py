@@ -54,7 +54,7 @@ Builder.load_string('''
     scroll_type: ['bars']
 
     RecycleBoxLayout:
-        default_size: None, dp(56)
+        default_size: None, dp(30)
         default_size_hint: 1, None
         size_hint_y: None
         height: self.minimum_height
