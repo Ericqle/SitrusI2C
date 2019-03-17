@@ -136,7 +136,7 @@ class Run(threading.Thread):
             elif 'read' in command:
                 address = int(command[1], 16)
                 reg_data = '{0:08b}'.format(self.slave.read_from(address, 1)[0])
-                self.script_log_label.text = "Read " + command[1] + ": " + reg_data
+                self.script_log_label.text = "Read " + command[1] + ": " + reg_data + ' (' + hex(int(reg_data, 2)) + ')'
                 self.script_progress_bar.value += progress_segment
             else:
                 self.script_preview_text_input.text = "Error"
