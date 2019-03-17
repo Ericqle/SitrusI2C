@@ -66,6 +66,21 @@
         TextInput:
             text: root.data
 
+<WriteAllPopup@Popup>
+    title: "Write All to Default"
+    text: ''
+    size_hint: .6, .4
+    auto_dismiss: False
+    BoxLayout:
+        orientation: 'vertical'
+        Label:
+            font_size: '16sp'
+            text: root.text
+        Button:
+            text: 'Okay'
+            on_release: root.dismiss()
+            size_hint: 1, .50
+
 <BitRecycleViewRow@Label>:
     text: ''
     text_size: self.width, None
@@ -119,6 +134,10 @@
             ActionButton:
                 text: "Read All"
                 on_press: i2c_screen.open_read_lane()
+
+            ActionButton:
+                text: "Write All"
+                on_press: i2c_screen.open_write_lane()
 
             ActionButton:
                 text: "Menu"

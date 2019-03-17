@@ -162,6 +162,38 @@ class I2CScreen(Screen):
                     strings.append(string)
         return strings
 
+    def open_write_lane(self):
+        if self.slave_device is not None:
+            write_all_popup = Factory.WriteAllPopup()
+            if self.write_all_in_lane() is True:
+                write_all_popup.text = "All addresses have successfully been written to default values"
+            else:
+                write_all_popup.text = "Error occured while writing"
+            write_all_popup.open()
+        else:
+            no_slave_error = Factory.ErrorPopup()
+            no_slave_error.text = "Error: No Save Device"
+            no_slave_error.open()
+
+    def write_all_in_lane(self):
+        status = True
+        current_tab = self.i2c_tabbed_panel.current_tab
+        for lane in self.lane_list:
+            if current_tab.text == lane.name:
+                for i2c_address in lane.i2c_address_list:
+                    value = hex(int(i2c_address.default, 2))
+                    if value.replace("0x", '').__len__() == 1:
+                        value = '0' + value.replace("0x", '')
+                    value = value.replace("0x", '')
+
+                    self.write(i2c_address.i2c_address, value)
+
+                    if self.read(i2c_address.i2c_address) == hex(int(i2c_address.default, 2)):
+                        pass
+                    else:
+                        status = False
+        return status
+
     def load_script(self, file_path):
         if path_leaf(file_path) in self.script_list:
             pass
