@@ -177,6 +177,9 @@ class I2CScreen(Screen):
                     elif 'wait' in row:
                         command_sequence = row.copy()[0: 2]
                         commands.append(command_sequence)
+                    elif 'read' in row:
+                        command_sequence = row.copy()[0: 2]
+                        commands.append(command_sequence)
             self.script_list.append(I2cScript(path_leaf(file_path), commands))
 
     def show_script_preview(self, script_name, preview):

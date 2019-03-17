@@ -19,6 +19,8 @@ class I2cScript:
                 preview += ("Write " + command[3] + " to bit(s) " + command[2] + " in " + command[1] + "\n")
             elif 'wait' in command:
                 preview += ("Wait " + command[1] + "ms\n")
+            elif 'read' in command:
+                preview += ("Read " + command[1] + "\n")
             else:
                 preview += "Error: unknown command"
         return preview
@@ -131,7 +133,11 @@ class Run(threading.Thread):
                 time.sleep((int(command[1])/1000) % 60)
                 self.script_log_label.text = "Waiting " + command[1] + "ms"
                 self.script_progress_bar.value += progress_segment
-
+            elif 'read' in command:
+                address = int(command[1], 16)
+                reg_data = '{0:08b}'.format(self.slave.read_from(address, 1)[0])
+                self.script_log_label.text = "Read " + command[1] + ": " + reg_data
+                self.script_progress_bar.value += progress_segment
             else:
                 self.script_preview_text_input.text = "Error"
 
