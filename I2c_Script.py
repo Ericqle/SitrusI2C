@@ -46,7 +46,12 @@ class Run(threading.Thread):
                 try:
                     if command[2] == '[7:0]':
                         address = int(command[1], 16)
-                        data = bytearray.fromhex(command[3].strip('0x'))
+
+                        write_value = command[3]
+                        if write_value.replace("0x", '').__len__() == 1:
+                            write_value = '0' + write_value.replace("0x", '')
+
+                        data = bytearray.fromhex(write_value.replace('0x', ''))
                         self.slave.write_to(address, data)
                         if int(hex(self.slave.read_from(address, 1)[0]), 16) == data[0]:
                             self.script_log_label.text = (command[3] + " written to bit(s) " + command[2] + " in " +
