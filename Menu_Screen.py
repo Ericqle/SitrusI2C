@@ -62,8 +62,21 @@ Builder.load_string('''
 
 <I2cTabbedPanelItem>:
     i2c_recycle_View: i2c_recycle_View
-    I2cRecycleView:
-        id: i2c_recycle_View
+    BoxLayout:
+        orientation: 'vertical'
+        BoxLayout:
+            size_hint: 1, .1
+            orientation: 'horizontal'
+            Label:
+                text: "Address"
+            Label:
+                text: "Name"
+            Label:
+                text: "Default"
+            Label:
+                text: "Read Value"
+        I2cRecycleView:
+            id: i2c_recycle_View
                     ''')
 
 
