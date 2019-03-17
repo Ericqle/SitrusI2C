@@ -28,7 +28,7 @@ Builder.load_string('''
     Button:
         text: root.address
         on_press: 
-            root.value = app.root.get_screen("i2c_screen").read(root.address)
+            root.value = app.root.get_screen("i2c_screen").get_dual_display_read(root.address)
             app.root.get_screen("i2c_screen").show_details(root.address, root.value)
     Label:
         text: root.chip_pin

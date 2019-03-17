@@ -96,6 +96,10 @@ class I2CScreen(Screen):
             no_slave_error.open()
             return ''
 
+    def get_dual_display_read(self, address):
+        reg_data = self.read(address)
+        return bin(int(reg_data, 16))[2:].zfill(8) + " (" + reg_data + ")"
+
     def configure_ftdi(self, port_address):
         try:
             i2c = I2cController()
