@@ -46,6 +46,13 @@ Builder.load_string('''
 
 <I2cRecycleView@RecycleView>:
     viewclass: 'I2cRecycleViewRow'
+    bar_width: 20
+    bar_length: 50
+    bar_color: 1, 1, 1, 1
+    bar_inactive_color: 160/255, 160/255, 160/255, 1
+    effect_cls: "ScrollEffect"
+    scroll_type: ['bars']
+
     RecycleBoxLayout:
         default_size: None, dp(56)
         default_size_hint: 1, None
