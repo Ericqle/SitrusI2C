@@ -123,7 +123,8 @@ class I2CScreen(Screen):
         for lane in self.lane_list:
             new_tab = I2cTabbedPanelItem(text=lane.name)
             new_tab.i2c_recycle_View.data = [{'address': address.i2c_address, 'chip_pin': address.chip_pin_name,
-                                              'value': address.value, 'default': address.default}
+                                              'value': address.value,
+                                              'default': address.default + ' (' + hex(int(address.default, 2)) + ')'}
                                              for address in lane.i2c_address_list]
             self.i2c_tabbed_panel.add_widget(new_tab)
         pass
