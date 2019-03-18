@@ -12,6 +12,7 @@ class SitrusI2cApp(App):
     Builder.load_file('I2cScript.kv')
     Builder.load_file('MenuScreen.kv')
     Builder.load_file('I2CScreen.kv')
+    Builder.load_file('Default.kv')
 
     def build(self):
         screen_manager = ScreenManager()
@@ -23,4 +24,5 @@ class SitrusI2cApp(App):
 if __name__ == '__main__':
     Window.size = (850, 500)
     Config.set('input', 'mouse', 'mouse,multitouch_on_demand')
+    Config.set('graphics', 'default_font', 'RobotoMono-Regular.ttf')
     SitrusI2cApp().run()
