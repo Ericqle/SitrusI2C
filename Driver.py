@@ -12,6 +12,7 @@ class SitrusI2cApp(App):
     Builder.load_file('I2cScript.kv')
     Builder.load_file('MenuScreen.kv')
     Builder.load_file('I2CScreen.kv')
+    Builder.load_file('Default.kv')
 
     def build(self):
         screen_manager = ScreenManager()
