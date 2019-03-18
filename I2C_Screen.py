@@ -51,15 +51,33 @@ class I2CScreen(Screen):
 
     @staticmethod
     def open_single_write():
-        pass
+        single_write_pop_up = Factory.I2cSingleWritePopup()
+        single_write_pop_up.open()
 
     @staticmethod
     def open_single_read():
         single_read_pop_up = Factory.I2cSingleReadPopup()
         single_read_pop_up.open()
 
-    def single_write(self):
-        pass
+    def single_write(self, address, value):
+        if self.slave_device is not None:
+            if self.validate_input(address):
+                if value != '':
+                    address = address.replace('0x', '')
+                    value = value.replace('0x', '')
+                    if len(value) == 1:
+                        value = '0' + value
+                    self.write(address, value)
+                    if int(hex(self.slave_device.read_from(int(address, 16), 1)[0]), 16) == int(value):
+                        return "0x" + value + " has been written to " + "0x" + address
+                    else:
+                        return "Error: " + "0x" + value + " count not be written to " + "0x" + address
+                else:
+                    return "Error: no value entered"
+            else:
+                return "Error: address must be a 2->4 digit hex value"
+        else:
+            return "Error: no slave device"
 
     def single_read(self, address):
         if self.validate_input(address):
@@ -116,6 +134,8 @@ class I2CScreen(Screen):
 
     def get_dual_display_read(self, address):
         reg_data = self.read(address)
+        if reg_data == '':
+            return "Error: no slave device"
         return bin(int(reg_data, 16))[2:].zfill(8) + " (" + reg_data + ")"
 
     def configure_ftdi(self, port_address):

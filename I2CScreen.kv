@@ -42,10 +42,8 @@
 
 <I2cSingleReadPopup@Popup>:
     title: "Read"
-    size_hint: .5, .4
+    size_hint: .5, .3
     auto_dismiss: False
-    address_text_input: address_text_input
-    address: ''
 
     BoxLayout:
         canvas.before:
@@ -84,6 +82,61 @@
                 text: 'Read'
                 on_press:
                     reg_data_label.text = app.root.get_screen("i2c_screen").single_read(address_text_input.text)
+
+<I2cSingleWritePopup@Popup>:
+    title: "Write"
+    size_hint: .5, .4
+    auto_dismiss: False
+
+    BoxLayout:
+        canvas.before:
+            Color:
+                rgb: 160/255, 160/255, 160/255
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        orientation: 'vertical'
+
+        BoxLayout:
+            orientation: 'horizontal'
+            padding: 5
+            spacing: 5
+
+            Label:
+                text: 'Address: '
+
+            TextInput:
+                id: address_text_input
+
+        BoxLayout:
+            orientation: 'horizontal'
+            padding: 5
+            spacing: 5
+
+            Label:
+                text: 'Value: '
+
+            TextInput:
+                id: value_text_input
+
+        Label:
+            id: reg_data_label
+            text: ''
+
+        BoxLayout:
+            orientation: 'horizontal'
+            padding: 5
+            spacing: 5
+
+            Button:
+                text: 'Close'
+                on_press: root.dismiss()
+
+            Button:
+                text: 'Write'
+                on_press:
+                    reg_data_label.text = app.root.get_screen("i2c_screen").single_write(address_text_input.text,
+                    value_text_input.text)
 
 <ReadLanePopup@Popup>
     title: "Read Lane"
