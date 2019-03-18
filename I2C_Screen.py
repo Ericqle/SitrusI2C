@@ -49,6 +49,24 @@ class I2CScreen(Screen):
         else:
             return value
 
+    @staticmethod
+    def open_single_write():
+        pass
+
+    @staticmethod
+    def open_single_read():
+        single_read_pop_up = Factory.I2cSingleReadPopup()
+        single_read_pop_up.open()
+
+    def single_write(self):
+        pass
+
+    def single_read(self, address):
+        if self.validate_input(address):
+            return self.get_dual_display_read(address)
+        else:
+            return "ERROR: address must be a 2->4 digit hex value"
+
     def write(self, address, value):
         if self.slave_device is not None:
             if value != '':
@@ -159,16 +177,12 @@ class I2CScreen(Screen):
     def read_all_in_lane(self):
         strings = list()
         current_tab = self.i2c_tabbed_panel.current_tab
-        for row in current_tab.i2c_recycle_View.data:
-            reg_data = self.get_dual_display_read(row["address"])
-            row["value"] = reg_data
-            string = row["address"] + ": " + reg_data
-            strings.append(string)
-        # for lane in self.lane_list:
-        #     if current_tab.text == lane.name:
-        #         for i2c_address in lane.i2c_address_list:
-        #             string = i2c_address.i2c_address + ": " + self.read(i2c_address.i2c_address)
-        #             strings.append(string)
+        if isinstance(current_tab, TabbedPanelItem):
+            for row in current_tab.i2c_recycle_View.data:
+                reg_data = self.get_dual_display_read(row["address"])
+                row["value"] = reg_data
+                string = row["address"] + ": " + reg_data
+                strings.append(string)
         return strings
 
     def open_write_lane(self):
