@@ -73,6 +73,7 @@
             orientation: 'horizontal'
 
             RecycleView:
+                size_hint: .8, 1
                 id: scripts_recycle_view
                 viewclass: 'I2cScriptRecycleViewRow'
                 RecycleBoxLayout:
@@ -82,8 +83,17 @@
                     height: self.minimum_height
                     orientation: 'vertical'
 
-            TextInput:
-                id: script_preview_text_input
+            ScrollView:
+                id:scroller
+                bar_width: 25
+                effect_cls: "ScrollEffect"
+                scroll_type: ['bars']
+                TextInput:
+                    size_hint_y: None
+                    height: max(self.minimum_height, scroller.height)
+                    font_size: '12sp'
+                    font_name: 'RobotoMono-Regular.ttf'
+                    id: script_preview_text_input
 
         ProgressBar:
             id: script_progress_bar

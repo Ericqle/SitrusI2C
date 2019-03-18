@@ -161,8 +161,16 @@
             size_hint: 1, .2
             text: root.lane_name
 
-        TextInput:
-            text: root.data
+        ScrollView:
+            id:scroller
+            bar_width: 25
+            effect_cls: "ScrollEffect"
+            scroll_type: ['bars']
+            TextInput:
+                size_hint_y: None
+                height: max(self.minimum_height, scroller.height)
+                font_name: 'RobotoMono-Regular.ttf'
+                text: root.data
 
 <WriteAllPopup@Popup>
     title: "Write All to Default"
