@@ -51,7 +51,8 @@
                 path: root.get_default_path()
 
             Button:
-                size_hint: 1, .2
+                pos_hint: {'x': .05}
+                size_hint: .9, .1
                 text: 'Load Config'
                 on_press: root.load_lane()
 
@@ -87,6 +88,7 @@
 
 
             Button:
-                size_hint: 1, .2
+                pos_hint: {'x': .05}
+                size_hint: .9, .1
                 text: 'Continue'
                 on_press: root.swap_to_i2c_screen()
