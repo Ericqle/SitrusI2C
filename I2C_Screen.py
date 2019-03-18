@@ -159,11 +159,16 @@ class I2CScreen(Screen):
     def read_all_in_lane(self):
         strings = list()
         current_tab = self.i2c_tabbed_panel.current_tab
-        for lane in self.lane_list:
-            if current_tab.text == lane.name:
-                for i2c_address in lane.i2c_address_list:
-                    string = i2c_address.i2c_address + ": " + self.read(i2c_address.i2c_address)
-                    strings.append(string)
+        for row in current_tab.i2c_recycle_View.data:
+            reg_data = self.get_dual_display_read(row["address"])
+            row["value"] = reg_data
+            string = row["address"] + ": " + reg_data
+            strings.append(string)
+        # for lane in self.lane_list:
+        #     if current_tab.text == lane.name:
+        #         for i2c_address in lane.i2c_address_list:
+        #             string = i2c_address.i2c_address + ": " + self.read(i2c_address.i2c_address)
+        #             strings.append(string)
         return strings
 
     def open_write_lane(self):
