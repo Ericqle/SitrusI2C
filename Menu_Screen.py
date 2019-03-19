@@ -16,7 +16,7 @@ Builder.load_string('''
 <I2cRecycleViewRow@BoxLayout>:
     canvas.before:
         Color:
-            rgb: 185/255, 185/255, 185/255
+            rgb: 225/255, 225/255, 225/255
         Rectangle:
             pos: self.pos
             size: self.size
@@ -35,7 +35,7 @@ Builder.load_string('''
     Label: 
         canvas.before:
             Color:
-                rgb: 150/255, 150/255, 150/255
+                rgb: 190/255, 190/255, 190/255
             Rectangle:
                 pos: self.pos
                 size: self.size
@@ -49,7 +49,7 @@ Builder.load_string('''
     bar_width: 20
     bar_length: 50
     bar_color: 1, 1, 1, 1
-    bar_inactive_color: 160/255, 160/255, 160/255, 1
+    bar_inactive_color: 200/255, 200/255, 200/255, 1
     effect_cls: "ScrollEffect"
     scroll_type: ['bars']
 
@@ -63,6 +63,12 @@ Builder.load_string('''
 <I2cTabbedPanelItem>:
     i2c_recycle_View: i2c_recycle_View
     BoxLayout:
+        canvas.before:
+            Color:
+                rgb: 190/255, 190/255, 190/255
+            Rectangle:
+                pos: self.pos
+                size: self.size
         orientation: 'vertical'
         BoxLayout:
             size_hint: 1, .1

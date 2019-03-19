@@ -25,3 +25,38 @@
             size_hint_x: None
             halign: 'right'
             text: '{}'.format(ctx.get_nice_size())
+
+<Button>:
+    background_normal: 'white.png'
+    background_color: 150/255, 150/255, 150/255, 1
+
+<Label>:
+    color: 0, 0, 0, 1
+
+<Popup>:
+    title_color: 0, 0, 0, 1
+    background: 'white.png'
+
+<Screen>:
+    canvas.before:
+        Color:
+            rgb: 1, 1, 1, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+<TabbedPanelHeader>:
+    halign: 'center'
+    valign: 'middle'
+    background_normal: 'white.png'
+    background_down: 'white.png'
+    border: (8, 8, 8, 8)
+    font_size: '15sp'
+
+<TabbedPanelStrip>
+    canvas:
+        Color:
+            rgba: (0, 1, 0, 1) # green
+        Rectangle:
+            size: self.size
+            pos: self.pos
