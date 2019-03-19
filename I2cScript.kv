@@ -1,7 +1,7 @@
 <I2cLoadScriptPopup@Popup>:
     title: "Load Script"
     auto_dismiss: True
-    size_hint: .8, 1
+    size_hint: .6, 1
 
     BoxLayout:
         canvas.before:
@@ -11,8 +11,6 @@
                 pos: self.pos
                 size: self.size
         orientation: 'vertical'
-        spacing: 25
-        padding: 25
 
         TextInput:
             id: script_file_text_input

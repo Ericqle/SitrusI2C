@@ -14,6 +14,8 @@ def path_leaf(path):
 
 Builder.load_string('''
 <I2cRecycleViewRow@BoxLayout>:
+    spacing: 2
+    padding: 2
     canvas.before:
         Color:
             rgb: 255/255, 255/255, 255/255
