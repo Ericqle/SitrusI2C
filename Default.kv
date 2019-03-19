@@ -53,3 +53,13 @@
     background_down: 'atlas://data/images/defaulttheme/button_pressed'
     border: (8, 8, 8, 8)
     font_size: '15sp'
+
+<FileChooserListView>:
+    canvas.before:
+        Color:
+            rgb: 1, 1, 1, 1
+        Rectangle:
+            size: self.size
+
+<TextInput>
+    background_normal: 'white.png'
