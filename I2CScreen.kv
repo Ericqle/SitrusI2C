@@ -1,6 +1,6 @@
 <I2cWritePopup@Popup>:
     title: "Write"
-    size_hint: .5, .35
+    size_hint: .5, .4
     auto_dismiss: False
     value_text_input: value_text_input
     address: ''
@@ -12,6 +12,12 @@
             Rectangle:
                 pos: self.pos
                 size: self.size
+            Color:
+                rgba: .5, .5, .5, 1
+            Line:
+                width: 1
+                rectangle: self.x, self.y, self.width, self.height
+
         orientation: 'vertical'
 
         BoxLayout:
@@ -42,7 +48,7 @@
 
 <I2cSingleReadPopup@Popup>:
     title: "Read"
-    size_hint: .5, .3
+    size_hint: .5, .4
     auto_dismiss: False
 
     BoxLayout:
@@ -52,6 +58,12 @@
             Rectangle:
                 pos: self.pos
                 size: self.size
+            Color:
+                rgba: .5, .5, .5, 1
+            Line:
+                width: 1
+                rectangle: self.x, self.y, self.width, self.height
+
         orientation: 'vertical'
 
         BoxLayout:
@@ -95,6 +107,12 @@
             Rectangle:
                 pos: self.pos
                 size: self.size
+            Color:
+                rgba: .5, .5, .5, 1
+            Line:
+                width: 1
+                rectangle: self.x, self.y, self.width, self.height
+
         orientation: 'vertical'
 
         BoxLayout:
@@ -221,6 +239,11 @@
                 Rectangle:
                     pos: self.pos
                     size: self.size
+                Color:
+                    rgba: .5, .5, .5, 1
+                Line:
+                    width: 1
+                    rectangle: self.x, self.y, self.width, self.height
             use_separator: True
 
             ActionPrevious:
@@ -282,6 +305,11 @@
                 Rectangle:
                     pos: self.pos
                     size: self.size
+                Color:
+                    rgba: .5, .5, .5, 1
+                Line:
+                    width: 1
+                    rectangle: self.x, self.y, self.width, self.height
             id: bit_recycle_view
             size_hint: 1, .45
 

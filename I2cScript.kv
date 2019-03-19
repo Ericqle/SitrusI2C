@@ -1,16 +1,11 @@
 <I2cLoadScriptPopup@Popup>:
     title: "Load Script"
     auto_dismiss: True
-    size_hint: .6, 1
+    size_hint: .6, .8
 
     BoxLayout:
-        canvas.before:
-            Color:
-                rgb: 220/255, 220/255, 220/255
-            Rectangle:
-                pos: self.pos
-                size: self.size
         orientation: 'vertical'
+        spacing: 10
 
         TextInput:
             id: script_file_text_input
@@ -22,6 +17,12 @@
             path: app.root.get_screen("menu_screen").get_default_path()
 
         BoxLayout:
+            canvas.before:
+                Color:
+                    rgb: 220/255, 220/255, 220/255
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
             orientation: 'horizontal'
             padding: 5
             spacing: 5

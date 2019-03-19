@@ -45,6 +45,12 @@
                 size_hint: 1, .1
 
             FileChooserListView:
+                canvas.after:
+                    Color:
+                        rgba: .5, .5, .5, 1
+                    Line:
+                        width: 1
+                        rectangle: self.x, self.y, self.width, self.height
                 id: config_file_chooser
                 path: root.get_default_path()
 

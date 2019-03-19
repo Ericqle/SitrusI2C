@@ -73,6 +73,13 @@ Builder.load_string('''
                 size: self.size
         orientation: 'vertical'
         BoxLayout:
+            canvas.before:
+                Color:
+                    rgba: .5, .5, .5, 1
+                Line:
+                    width: 1
+                    rectangle: self.x, self.y, self.width, self.height
+
             size_hint: 1, .1
             orientation: 'horizontal'
             Label:
