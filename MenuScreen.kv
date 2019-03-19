@@ -30,6 +30,11 @@
                 Rectangle:
                     pos: self.pos
                     size: self.size
+                Color:
+                    rgba: .5, .5, .5, 1
+                Line:
+                    width: 1
+                    rectangle: self.x, self.y, self.width, self.height
             orientation: 'vertical'
             spacing: 10
             padding: 10
@@ -50,6 +55,7 @@
                 on_press: root.load_lane()
 
         BoxLayout:
+            size_hint: .5, 1
             orientation: 'vertical'
             spacing: 10
             padding: 10
@@ -61,19 +67,28 @@
                     Rectangle:
                         pos: self.pos
                         size: self.size
+                    Color:
+                        rgba: .5, .5, .5, 1
+                    Line:
+                        width: 1
+                        rectangle: self.x, self.y, self.width, self.height
                 font_size: '16sp'
                 text: "Loaded Lanes"
-                size_hint: 1, .2
+                size_hint: 1, .1
 
             ConfigRecycleView:
                 canvas.before:
                     Color:
-                        rgb: 245/255, 245/255, 245/255
+                        rgb: 250/255, 250/255, 250/255
                     Rectangle:
                         pos: self.pos
                         size: self.size
+                    Color:
+                        rgba: .5, .5, .5, 1
+                    Line:
+                        width: 1
+                        rectangle: self.x, self.y, self.width, self.height
                 id: loaded_lanes_recycle_view
-                size_hint: 1, .8
 
             BoxLayout:
                 orientation: 'horizontal'

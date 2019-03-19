@@ -27,6 +27,13 @@
             text: '{}'.format(ctx.get_nice_size())
 
 <Button>:
+    canvas.before:
+        Color:
+            rgba: .5, .5, .5, 1
+        Line:
+            width: 1
+            rectangle: self.x, self.y, self.width, self.height
+
     background_normal: 'white.png'
     background_color: 180/255, 180/255, 180/255, 1
 
@@ -63,3 +70,9 @@
 
 <TextInput>
     background_normal: 'white.png'
+    canvas.after:
+        Color:
+            rgba: .5, .5, .5, 1
+        Line:
+            width: 1
+            rectangle: self.x, self.y, self.width, self.height
