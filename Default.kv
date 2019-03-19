@@ -76,3 +76,14 @@
         Line:
             width: 1
             rectangle: self.x, self.y, self.width, self.height
+
+<ActionSeparator>:
+    size_hint_x: None
+    minimum_width: '1.5sp'
+    width: self.minimum_width
+    canvas:
+        Color:
+            rgba: 1,1,1,1
+        Rectangle:
+            pos: self.x, self.y + sp(4)
+            size: self.width, self.height - sp(8)
