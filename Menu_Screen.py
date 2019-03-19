@@ -16,7 +16,7 @@ Builder.load_string('''
 <I2cRecycleViewRow@BoxLayout>:
     canvas.before:
         Color:
-            rgb: 225/255, 225/255, 225/255
+            rgb: 255/255, 255/255, 255/255
         Rectangle:
             pos: self.pos
             size: self.size
@@ -35,7 +35,7 @@ Builder.load_string('''
     Label: 
         canvas.before:
             Color:
-                rgb: 190/255, 190/255, 190/255
+                rgb: 220/255, 220/255, 220/255
             Rectangle:
                 pos: self.pos
                 size: self.size
@@ -49,7 +49,7 @@ Builder.load_string('''
     bar_width: 20
     bar_length: 50
     bar_color: 1, 1, 1, 1
-    bar_inactive_color: 200/255, 200/255, 200/255, 1
+    bar_inactive_color: 230/255, 230/255, 230/255, 1
     effect_cls: "ScrollEffect"
     scroll_type: ['bars']
 
@@ -65,7 +65,7 @@ Builder.load_string('''
     BoxLayout:
         canvas.before:
             Color:
-                rgb: 190/255, 190/255, 190/255
+                rgb: 220/255, 220/255, 220/255
             Rectangle:
                 pos: self.pos
                 size: self.size
