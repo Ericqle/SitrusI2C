@@ -235,6 +235,8 @@
                 text: "Menu"
                 on_press: root.manager.current = 'menu_screen'
 
+            ActionSeparator:
+
             ActionButton:
                 text: "Read"
                 on_press: i2c_screen.open_single_read()
@@ -242,6 +244,8 @@
             ActionButton:
                 text: "Write"
                 on_press: i2c_screen.open_single_write()
+
+            ActionSeparator:
 
             ActionButton:
                 text: "Read All"
