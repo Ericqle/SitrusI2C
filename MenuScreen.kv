@@ -20,8 +20,8 @@
 
     BoxLayout:
         orientation: 'horizontal'
-        padding: 25
-        spacing: 25
+        padding: 15
+        spacing: 15
 
         BoxLayout:
             canvas.before:
@@ -31,8 +31,8 @@
                     pos: self.pos
                     size: self.size
             orientation: 'vertical'
-            spacing: 5
-            padding: 5
+            spacing: 10
+            padding: 10
 
             TextInput:
                 id: config_file_text_input
@@ -51,6 +51,8 @@
 
         BoxLayout:
             orientation: 'vertical'
+            spacing: 10
+            padding: 10
 
             Label:
                 canvas.before:
@@ -64,19 +66,26 @@
                 size_hint: 1, .2
 
             ConfigRecycleView:
+                canvas.before:
+                    Color:
+                        rgb: 245/255, 245/255, 245/255
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
                 id: loaded_lanes_recycle_view
                 size_hint: 1, .8
 
             BoxLayout:
                 orientation: 'horizontal'
-                size_hint: 1, .1
+                size_hint: .8, .1
+                pos_hint: {'x': .1}
 
                 Label:
                     text: "Port Address"
 
                 TextInput:
                     id: port_address_text_input
-                    size_hint: .5, 1
+                    size_hint: 1, .8
                     text: '0x60'
 
 

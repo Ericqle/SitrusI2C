@@ -265,22 +265,22 @@
     BoxLayout:
         size_hint: 1, .925
         orientation: 'vertical'
-        padding: 5
-        spacing: 5
+        padding: 10
+        spacing: 10
 
         TabbedPanel:
             id: i2c_tabbed_panel
+            background_disabled_image: 'white.png'
+            background_image: 'white.png'
+            do_default_tab: False
+
+        BitRecycleView:
             canvas.before:
                 Color:
                     rgb: 245/255, 245/255, 245/255
                 Rectangle:
                     pos: self.pos
                     size: self.size
-            background_disabled_image: 'white.png'
-            background_image: 'white.png'
-            do_default_tab: False
-
-        BitRecycleView:
             id: bit_recycle_view
             size_hint: 1, .45
 
