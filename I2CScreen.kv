@@ -281,16 +281,15 @@
                 text: "Write All"
                 on_press: i2c_screen.open_write_lane()
 
-            ActionGroup:
-                text: 'Script'
+            ActionSeparator:
 
-                ActionButton:
-                    text: "Load Scripts"
-                    on_press: i2c_screen.open_load_script()
+            ActionButton:
+                text: "Load Scripts"
+                on_press: i2c_screen.open_load_script()
 
-                ActionButton:
-                    text: "Run Script"
-                    on_press: i2c_screen.open_run_script()
+            ActionButton:
+                text: "Run Script"
+                on_press: i2c_screen.open_run_script()
 
     BoxLayout:
         size_hint: 1, .925
