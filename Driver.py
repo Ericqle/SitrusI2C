@@ -4,8 +4,6 @@ from kivy.uix.screenmanager import ScreenManager
 from kivy.config import Config
 from Menu_Screen import MenuScreen
 from I2C_Screen import I2CScreen
-import os
-os.environ['KIVY_GL_BACKEND'] = 'sdl2'
 
 
 class SitrusI2cApp(App):
