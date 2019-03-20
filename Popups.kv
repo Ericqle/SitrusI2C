@@ -1,3 +1,140 @@
+<LutPopup>:
+    pam1: pam1
+    pam2: pam2
+    a: a
+    b: b
+    c: c
+    calc: calc
+    scale: scale
+    lut_text: lut_text
+
+    size_hint: .8, .8
+    title: "LUT"
+
+    BoxLayout:
+        canvas.before:
+            Color:
+                rgb: 245/255, 245/255, 245/255, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        orientation: 'vertical'
+        padding: 5
+        spacing: 5
+
+        BoxLayout:
+            canvas.before:
+                Color:
+                    rgb: 1, 1, 1, 1
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+                Color:
+                    rgba: .5, .5, .5, 1
+                Line:
+                    width: 1
+                    rectangle: self.x, self.y, self.width, self.height
+            orientation: 'horizontal'
+            size_hint: 1, .4
+            padding: 5
+            spacing: 5
+
+            BoxLayout:
+                padding: 5
+                spacing: 5
+                orientation: 'vertical'
+                Label:
+                    canvas.before:
+                        Color:
+                            rgb: 240/255, 240/255, 240/255, 1
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+                    text: 'PAM Inner Binary Weights'
+                BoxLayout:
+                    size_hint: .5, 1
+                    pos_hint: {'x': .25}
+                    orientation: 'horizontal'
+                    spacing: 5
+                    Label:
+                        text: '1: '
+                    TextInput:
+                        id: pam1
+                    Label:
+                        text: '2: '
+                    TextInput:
+                        id: pam2
+            BoxLayout:
+                padding: 5
+                spacing: 5
+                orientation: 'vertical'
+                Label:
+                    canvas.before:
+                        Color:
+                            rgb: 240/255, 240/255, 240/255, 1
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+                    text: 'Coefficients'
+                BoxLayout:
+                    size_hint: .8, 1
+                    pos_hint: {'x': .1}
+                    orientation: 'horizontal'
+                    spacing: 5
+                    Label:
+                        text: 'A: '
+                    TextInput:
+                        id: a
+                    Label:
+                        text: 'B: '
+                    TextInput:
+                        id: b
+                    Label:
+                        text: 'C: '
+                    TextInput:
+                        id: c
+
+            BoxLayout:
+                padding: 5
+                spacing: 5
+                orientation: 'vertical'
+                Label:
+                    canvas.before:
+                        Color:
+                            rgb: 240/255, 240/255, 240/255, 1
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+                    text: 'Scale Factor'
+                BoxLayout:
+                    size_hint: .5, 1
+                    pos_hint: {'x': .25}
+                    orientation: 'horizontal'
+                    spacing: 5
+                    Label:
+                        text: '(0 to 1): '
+                    TextInput:
+                        size_hint: .3, 1
+                        id: scale
+                        text: ''
+
+        Button:
+            size_hint: .8, .2
+            pos_hint: {'x': .1}
+            id: calc
+            text: "Calc Look up Table"
+            on_press: root.calc_lut()
+
+        ScrollView:
+            id: scroller
+            bar_width: 25
+            effect_cls: "ScrollEffect"
+            scroll_type: ['bars']
+            TextInput:
+                id: lut_text
+                size_hint_y: None
+                height: max(self.minimum_height, scroller.height)
+
 <ErrorPopup@Popup>:
     title: "Error"
     text: ''

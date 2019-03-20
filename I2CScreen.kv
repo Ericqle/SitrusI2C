@@ -258,6 +258,12 @@
             ActionSeparator:
 
             ActionButton:
+                text: "LUT"
+                on_press: root.open_lut_popup()
+
+            ActionSeparator:
+
+            ActionButton:
                 text: "Read"
                 on_press: i2c_screen.open_single_read()
 

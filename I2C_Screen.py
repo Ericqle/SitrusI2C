@@ -6,6 +6,7 @@ from pyftdi.ftdi import FtdiError
 from pyftdi.usbtools import UsbToolsError
 from usb.core import USBError
 from I2c_Script import I2cScript
+from kivy.uix.popup import Popup
 import ntpath
 import re
 import csv
@@ -19,6 +20,69 @@ def path_leaf(path):
 
 class I2cTabbedPanelItem(TabbedPanelItem):
     pass
+
+
+class LutPopup(Popup):
+    addresses = range(64)
+
+    @staticmethod
+    def get_lut(addresses, bin_weight_eye_adj_param1, bin_weight_eye_adj_param2, a_pre, b_main, c_post, scale_factor):
+
+        y_values = list()
+        minimized_values = list()
+        normalized_values = list()
+        final_lut_ints = list()
+        final_lut_bins = list()
+
+        for address in addresses:
+            bin_string = format(address, '06b')
+
+            a = ((bin_weight_eye_adj_param2 * int(bin_string[0])) + (
+                        bin_weight_eye_adj_param1 * int(bin_string[1]))) * a_pre
+            b = ((bin_weight_eye_adj_param2 * int(bin_string[2])) + (
+                        bin_weight_eye_adj_param1 * int(bin_string[3]))) * b_main
+            c = ((bin_weight_eye_adj_param2 * int(bin_string[4])) + (
+                        bin_weight_eye_adj_param1 * int(bin_string[5]))) * c_post
+            sum_factor = a + b + c
+
+            y_values.append(sum_factor)
+
+        for y_value in y_values:
+            minimized_values.append(y_value - min(y_values))
+
+        for minimized_value in minimized_values:
+            normalized_values.append((minimized_value / max(minimized_values)) * 63)
+
+        for normalized_value in normalized_values:
+            final_lut_ints.append(((normalized_value - 31.5) * scale_factor) + 31.5)
+
+        for final_lut_int in final_lut_ints:
+            final_lut_bins.append(format(int(final_lut_int), '06b'))
+
+        return final_lut_bins
+
+    def calc_lut(self):
+        try:
+            bin_weight_eye_adj_param1 = float(self.pam1.text)
+            bin_weight_eye_adj_param2 = float(self.pam2.text)
+            a_pre = float(self.a.text)
+            b_main = float(self.b.text)
+            c_post = float(self.c.text)
+            scale_factor = float(self.scale.text)
+
+            # get lut valuse
+            lut = self.get_lut(self.addresses, bin_weight_eye_adj_param1, bin_weight_eye_adj_param2, a_pre, b_main,
+                               c_post, scale_factor)
+
+            # transpose to get 64 bit values
+            lut_transposed = [''.join(s) for s in zip(*lut)]
+
+            self.lut_text.text = ''
+            for value in lut_transposed:
+                value = ' '.join(value[i:i+4] for i in range(0, len(value), 4))
+                self.lut_text.text += (value + '\n\n')
+        except ValueError:
+            self.lut_text.text = 'Error: invalid input values'
 
 
 class I2CScreen(Screen):
@@ -48,6 +112,11 @@ class I2CScreen(Screen):
             return value
         else:
             return value
+
+    @staticmethod
+    def open_lut_popup():
+        lut_pop_up = LutPopup()
+        lut_pop_up.open()
 
     @staticmethod
     def open_single_write():
@@ -284,4 +353,3 @@ class I2CScreen(Screen):
             no_slave_error = Factory.ErrorPopup()
             no_slave_error.text = "Error: No Save Device"
             no_slave_error.open()
-
