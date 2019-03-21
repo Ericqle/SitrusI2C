@@ -82,7 +82,7 @@ class LutPopup(Popup):
 
             lut_value_list = list()
 
-            for row in lut_transposed:
+            for row in reversed(lut_transposed):
                 row = ' '.join(row[i:i+8] for i in range(0, len(row), 8))
                 self.lut_text.text += (row + '\n\n')
 
