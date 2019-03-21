@@ -132,15 +132,24 @@ class I2CScreen(Screen):
         if self.slave_device is not None:
             if self.validate_input(address):
                 if value != '':
-                    address = address.replace('0x', '')
-                    value = value.replace('0x', '')
-                    if len(value) == 1:
-                        value = '0' + value
-                    self.write(address, value)
-                    if int(hex(self.slave_device.read_from(int(address, 16), 1)[0]), 16) == int(value):
-                        return "0x" + value + " has been written to " + "0x" + address
+                    if self.validate_input(value):
+                        address = int(address, 16)
+                        write_value = value
+
+                        if write_value.replace("0x", '').__len__() == 1:
+                            write_value = '0' + write_value.replace("0x", '')
+                        if write_value.replace("0x", '').__len__() == 3:
+                            write_value = '0' + write_value.replace("0x", '')
+
+                        data = bytearray.fromhex(write_value.replace('0x', ''))
+                        self.slave_device.write_to(address, data)
+
+                        if int(hex(self.slave_device.read_from(address, 1)[0]), 16) == data[0]:
+                            return "0x" + write_value + " has been written to " + "0x" + str(address)
+                        else:
+                            return "Error: " + "0x" + write_value + " count not be written to " + "0x" + str(address)
                     else:
-                        return "Error: " + "0x" + value + " count not be written to " + "0x" + address
+                        return "Error: value must be a 2->4 digit hex value"
                 else:
                     return "Error: no value entered"
             else:
@@ -160,7 +169,9 @@ class I2CScreen(Screen):
                 try:
                     temp_address = int(address, 16)
                     if self.validate_input(value):
-                        data = bytearray.fromhex(self.get_valid_value_form(value))
+                        if value.replace("0x", '').__len__() == 3:
+                            value = '0' + value.replace("0x", '')
+                        data = bytearray.fromhex(self.get_valid_value_form(value.replace('0x', '')))
                         self.slave_device.write_to(temp_address, data)  # write
                         self.show_details(address, self.read(address))  # read and refresh
                     else:
@@ -307,9 +318,9 @@ class I2CScreen(Screen):
         return status
 
     def load_script(self, file_path):
-        if path_leaf(file_path) in self.script_list:
-            pass
-        elif file_path.__contains__(".csv"):
+        if file_path.__contains__(".csv"):
+            if path_leaf(file_path) in self.script_list:
+                self.script_list.remove(path_leaf(file_path))
             with open(file_path) as csv_file:
                 csv_reader = csv.reader(csv_file, delimiter=';')
                 commands = list()

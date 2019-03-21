@@ -52,6 +52,8 @@ class Run(threading.Thread):
                         write_value = command[3]
                         if write_value.replace("0x", '').__len__() == 1:
                             write_value = '0' + write_value.replace("0x", '')
+                        if write_value.replace("0x", '').__len__() == 3:
+                            write_value = '0' + write_value.replace("0x", '')
 
                         data = bytearray.fromhex(write_value.replace('0x', ''))
                         self.slave.write_to(address, data)
@@ -79,6 +81,8 @@ class Run(threading.Thread):
 
                         if write_value.replace("0x", '').__len__() == 1:
                             write_value = '0' + write_value
+                        if write_value.replace("0x", '').__len__() == 3:
+                            write_value = '0' + write_value.replace("0x", '')
 
                         # write
                         data = bytearray.fromhex(write_value.replace("0x", ''))
@@ -109,6 +113,8 @@ class Run(threading.Thread):
 
                         if write_value.replace("0x", '').__len__() == 1:
                             write_value = '0' + write_value
+                        if write_value.replace("0x", '').__len__() == 3:
+                            write_value = '0' + write_value.replace("0x", '')
 
                         # write
                         data = bytearray.fromhex(write_value.replace("0x", ''))
