@@ -145,9 +145,12 @@ class I2CScreen(Screen):
                         self.slave_device.write_to(address, data)
 
                         if int(hex(self.slave_device.read_from(address, 1)[0]), 16) == data[0]:
-                            return "0x" + write_value + " has been written to " + "0x" + str(address)
+                            return "0x" + write_value + " has been written to " + "0x" + str(address) + "\n" +\
+                                   "Read value: " + hex(self.slave_device.read_from(address, 1)[0])
                         else:
-                            return "Error: " + "0x" + write_value + " count not be written to " + "0x" + str(address)
+                            return "Error: " + "0x" + write_value + " count not be written to " + "0x" + str(address) +\
+                                   "\n" + "Read value: " + hex(self.slave_device.read_from(address, 1)[0])
+
                     else:
                         return "Error: value must be a 2->4 digit hex value"
                 else:

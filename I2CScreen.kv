@@ -97,7 +97,7 @@
 
 <I2cSingleWritePopup@Popup>:
     title: "Write"
-    size_hint: .5, .4
+    size_hint: .5, .5
     auto_dismiss: False
 
     BoxLayout:
@@ -116,6 +116,7 @@
         orientation: 'vertical'
 
         BoxLayout:
+            size_hint: 1, .8
             orientation: 'horizontal'
             padding: 5
             spacing: 5
@@ -127,6 +128,7 @@
                 id: address_text_input
 
         BoxLayout:
+            size_hint: 1, .8
             orientation: 'horizontal'
             padding: 5
             spacing: 5
