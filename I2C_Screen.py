@@ -24,6 +24,7 @@ class I2cTabbedPanelItem(TabbedPanelItem):
 
 class LutPopup(Popup):
     addresses = range(64)
+    script_values = list()
 
     @staticmethod
     def get_lut(addresses, bin_weight_eye_adj_param1, bin_weight_eye_adj_param2, a_pre, b_main, c_post, scale_factor):
@@ -78,9 +79,20 @@ class LutPopup(Popup):
             lut_transposed = [''.join(s) for s in zip(*lut)]
 
             self.lut_text.text = ''
-            for value in lut_transposed:
-                value = ' '.join(value[i:i+4] for i in range(0, len(value), 4))
-                self.lut_text.text += (value + '\n\n')
+
+            lut_value_list = list()
+
+            for row in lut_transposed:
+                row = ' '.join(row[i:i+8] for i in range(0, len(row), 8))
+                self.lut_text.text += (row + '\n\n')
+
+                row = row.split(' ')
+                for value in reversed(row):
+                    value = "{0:#0{1}x}".format((int(value, 2)), 6)
+                    lut_value_list.append(value)
+
+            self.script_values = lut_value_list
+
         except ValueError:
             self.lut_text.text = 'Error: invalid input values'
         except ZeroDivisionError:
@@ -321,6 +333,37 @@ class I2CScreen(Screen):
                     else:
                         status = False
         return status
+
+    def create_load_lut_script(self, start_address, values):
+        if len(values) != 0:
+            if self.validate_input(start_address):
+                if 'LUT_Script' in self.script_list:
+                    self.script_list.remove('LUT_Script')
+
+                commands = list()
+                address = start_address
+
+                for i in range(len(values)):
+                    address = int(address, 16)
+                    address = "{0:#0{1}x}".format(address, 6)
+                    command_sequence = ['write', address, '[7:0]', values[i]]
+                    commands.append(command_sequence)
+                    address = int(address, 16) + 1
+                    address = "{0:#0{1}x}".format(address, 6)
+
+                self.script_list.append(I2cScript('LUT_Script', commands))
+
+                lut_script_notice = Factory.NoticePopup()
+                lut_script_notice.text = "LUT Script has een Added"
+                lut_script_notice.open()
+            else:
+                blank_adddr_error = Factory.ErrorPopup()
+                blank_adddr_error.text = "Error: no address added or invalid address"
+                blank_adddr_error.open()
+        else:
+            no_lut_error = Factory.ErrorPopup()
+            no_lut_error.text = "Error: LUT not calculated"
+            no_lut_error.open()
 
     def load_script(self, file_path):
         if file_path.__contains__(".csv"):

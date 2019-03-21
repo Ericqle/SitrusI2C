@@ -118,12 +118,26 @@
                         id: scale
                         text: ''
 
-        Button:
-            size_hint: .8, .2
-            pos_hint: {'x': .1}
-            id: calc
-            text: "Calc Look up Table"
-            on_press: root.calc_lut()
+        BoxLayout:
+            padding: 5
+            spacing: 5
+            size_hint: 1, .2
+            orientation: 'horizontal'
+
+            Button:
+                id: calc
+                text: "Calc Look up Table"
+                on_press:
+                    root.calc_lut()
+
+            Button:
+                text: "Make LUT Script"
+                on_press:
+                    app.root.get_screen("i2c_screen").create_load_lut_script(start_address.text, root.script_values)
+
+            TextInput:
+                id: start_address
+                text: ''
 
         ScrollView:
             id: scroller
@@ -137,6 +151,21 @@
 
 <ErrorPopup@Popup>:
     title: "Error"
+    text: ''
+    size_hint: .6, .4
+    auto_dismiss: False
+    BoxLayout:
+        orientation: 'vertical'
+        Label:
+            font_size: '16sp'
+            text: root.text
+        Button:
+            text: 'Okay'
+            on_release: root.dismiss()
+            size_hint: 1, .50
+
+<NoticePopup@Popup>:
+    title: "Notice"
     text: ''
     size_hint: .6, .4
     auto_dismiss: False
