@@ -83,6 +83,8 @@ class LutPopup(Popup):
                 self.lut_text.text += (value + '\n\n')
         except ValueError:
             self.lut_text.text = 'Error: invalid input values'
+        except ZeroDivisionError:
+            self.lut_text.text = 'Error: invalid input values'
 
 
 class I2CScreen(Screen):
@@ -148,7 +150,7 @@ class I2CScreen(Screen):
                             return "0x" + write_value + " has been written to " + "0x" + str(address) + "\n" +\
                                    "Read value: " + hex(self.slave_device.read_from(address, 1)[0])
                         else:
-                            return "Error: " + "0x" + write_value + " count not be written to " + "0x" + str(address) +\
+                            return "Error: " + "0x" + write_value + " could not be written to " + "0x" + str(address) +\
                                    "\n" + "Read value: " + hex(self.slave_device.read_from(address, 1)[0])
 
                     else:
