@@ -134,7 +134,8 @@
                 text: "Make LUT Script"
                 on_press:
                     app.root.get_screen("i2c_screen").create_load_lut_script(start_address.text, root.script_values)
-
+            Label:
+                text: "LSB Address:"
             TextInput:
                 id: start_address
                 text: ''
