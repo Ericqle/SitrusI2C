@@ -242,6 +242,8 @@ class I2CScreen(Screen):
         reg_data = self.read(address)
         if reg_data == '':
             return "Error: no slave device"
+        if reg_data == 'Read_Fail':
+            return "Error: slave error"
         return bin(int(reg_data, 16))[2:].zfill(8) + " (" + reg_data + ")"
 
     def configure_ftdi(self, port_address):
