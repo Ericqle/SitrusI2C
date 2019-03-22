@@ -75,8 +75,15 @@
                 size_hint: .8, 1
                 id: scripts_recycle_view
                 viewclass: 'I2cScriptRecycleViewRow'
+                bar_width: 20
+                bar_length: 50
+                bar_color: 1, 1, 1, 1
+                bar_inactive_color: 230/255, 230/255, 230/255, 1
+                effect_cls: "ScrollEffect"
+                scroll_type: ['bars']
+
                 RecycleBoxLayout:
-                    default_size: None, dp(56)
+                    default_size: None, dp(40)
                     default_size_hint: 1, None
                     size_hint_y: None
                     height: self.minimum_height
