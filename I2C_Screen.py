@@ -87,8 +87,9 @@ class LutPopup(Popup):
                 self.lut_text.text += (row + '\n\n')
 
                 row = row.split(' ')
-                for value in reversed(row):
-                    value = "{0:#0{1}x}".format((int(value, 2)), 6)
+                for value in row:
+                    value = ''.join(reversed(value))
+                    value = "{0:#0{1}x}".format((int(value, 2)), 4)
                     lut_value_list.append(value)
 
             self.script_values = lut_value_list
@@ -113,6 +114,14 @@ class I2CScreen(Screen):
 
     @staticmethod
     def validate_input(text):
+        valid = re.compile(r"^[a-fA-F0-9]{2}$")
+        if not valid.match(text.replace("0x", "")):
+            return False
+        else:
+            return True
+
+    @staticmethod
+    def validate_address(text):
         valid = re.compile(r"^[a-fA-F0-9]{2,4}$")
         if not valid.match(text.replace("0x", "")):
             return False
@@ -144,7 +153,7 @@ class I2CScreen(Screen):
 
     def single_write(self, address, value):
         if self.slave_device is not None:
-            if self.validate_input(address):
+            if self.validate_address(address):
                 if value != '':
                     if self.validate_input(value):
                         address = int(address, 16)
@@ -166,7 +175,7 @@ class I2CScreen(Screen):
                                    "\n" + "Read value: " + hex(self.slave_device.read_from(address, 1)[0])
 
                     else:
-                        return "Error: value must be a 2->4 digit hex value"
+                        return "Error: value must be a 2 digit hex value"
                 else:
                     return "Error: no value entered"
             else:
@@ -175,7 +184,7 @@ class I2CScreen(Screen):
             return "Error: no slave device"
 
     def single_read(self, address):
-        if self.validate_input(address):
+        if self.validate_address(address):
             return self.get_dual_display_read(address)
         else:
             return "ERROR: address must be a 2->4 digit hex value"
@@ -193,7 +202,7 @@ class I2CScreen(Screen):
                         self.show_details(address, self.read(address))  # read and refresh
                     else:
                         format_error = Factory.ErrorPopup()
-                        format_error.text = "ERROR: invalid input (must be a 2->4 digit hex value)"
+                        format_error.text = "ERROR: invalid input (must be a 2 digit hex value)"
                         format_error.open()
                 except FtdiError:
                     usb_slave_error = Factory.ErrorPopup()
@@ -336,7 +345,7 @@ class I2CScreen(Screen):
 
     def create_load_lut_script(self, start_address, values):
         if len(values) != 0:
-            if self.validate_input(start_address):
+            if self.validate_address(start_address):
                 if 'LUT_Script' in self.script_list:
                     self.script_list.remove('LUT_Script')
 
@@ -354,7 +363,7 @@ class I2CScreen(Screen):
                 self.script_list.append(I2cScript('LUT_Script', commands))
 
                 lut_script_notice = Factory.NoticePopup()
-                lut_script_notice.text = "LUT Script has een Added"
+                lut_script_notice.text = "LUT Script has been Added"
                 lut_script_notice.open()
             else:
                 blank_adddr_error = Factory.ErrorPopup()
