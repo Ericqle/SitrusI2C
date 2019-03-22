@@ -152,36 +152,51 @@ class I2CScreen(Screen):
         single_read_pop_up.open()
 
     def single_write(self, address, value):
+        return_value = "Error occurred when writing"
         if self.slave_device is not None:
             if self.validate_address(address):
                 if value != '':
                     if self.validate_input(value):
-                        address = int(address, 16)
-                        write_value = value
+                        try:
+                            address = int(address, 16)
+                            write_value = value
 
-                        if write_value.replace("0x", '').__len__() == 1:
-                            write_value = '0' + write_value.replace("0x", '')
-                        if write_value.replace("0x", '').__len__() == 3:
-                            write_value = '0' + write_value.replace("0x", '')
+                            if write_value.replace("0x", '').__len__() == 1:
+                                write_value = '0' + write_value.replace("0x", '')
+                            if write_value.replace("0x", '').__len__() == 3:
+                                write_value = '0' + write_value.replace("0x", '')
 
-                        data = bytearray.fromhex(write_value.replace('0x', ''))
-                        self.slave_device.write_to(address, data)
+                            data = bytearray.fromhex(write_value.replace('0x', ''))
+                            self.slave_device.write_to(address, data)
 
-                        if int(hex(self.slave_device.read_from(address, 1)[0]), 16) == data[0]:
-                            return "0x" + write_value + " has been written to " + hex(address) + "\n" +\
-                                   "Read value: " + hex(self.slave_device.read_from(address, 1)[0])
-                        else:
-                            return "Error: " + "0x" + write_value + " could not be written to " + "0x" + str(address) +\
-                                   "\n" + "Read value: " + hex(self.slave_device.read_from(address, 1)[0])
-
+                            if int(hex(self.slave_device.read_from(address, 1)[0]), 16) == data[0]:
+                                return_value = "0x" + write_value + " has been written to " + hex(address) + "\n" +\
+                                       "Read value: " + hex(self.slave_device.read_from(address, 1)[0])
+                            else:
+                                return_value = "Error: " + "0x" + write_value + " could not be written to " + "0x" +\
+                                       str(address) + "\n" + "Read value: " +\
+                                       hex(self.slave_device.read_from(address, 1)[0])
+                        except FtdiError:
+                            usb_slave_error = Factory.ErrorPopup()
+                            usb_slave_error.text = "Error: No usb device (it may have been disconnected)"
+                            usb_slave_error.open()
+                        except I2cNackError:
+                            nack_error = Factory.ErrorPopup()
+                            nack_error.text = "Error: Nack from Slave"
+                            nack_error.open()
+                        except I2cIOError:
+                            pass
+                        except I2cTimeoutError:
+                            pass
                     else:
-                        return "Error: value must be a 2 digit hex value"
+                        return_value = "Error: value must be a 2 digit hex value"
                 else:
-                    return "Error: no value entered"
+                    return_value = "Error: no value entered"
             else:
-                return "Error: address must be a 2->4 digit hex value"
+                return_value = "Error: address must be a 2->4 digit hex value"
         else:
-            return "Error: no slave device"
+            return_value = "Error: no slave device"
+        return return_value
 
     def single_read(self, address):
         if self.validate_address(address):
@@ -209,7 +224,9 @@ class I2CScreen(Screen):
                     usb_slave_error.text = "Error: No usb device (it may have been disconnected)"
                     usb_slave_error.open()
                 except I2cNackError:
-                    pass
+                    nack_error = Factory.ErrorPopup()
+                    nack_error.text = "Error: Nack from Slave"
+                    nack_error.open()
                 except I2cIOError:
                     pass
                 except I2cTimeoutError:
@@ -226,7 +243,9 @@ class I2CScreen(Screen):
                 usb_slave_error.text = "Error: No usb device (it may have been disconnected)"
                 usb_slave_error.open()
             except I2cNackError:
-                pass
+                nack_error = Factory.ErrorPopup()
+                nack_error.text = "Error: Nack from Slave"
+                nack_error.open()
             except I2cIOError:
                 pass
             except I2cTimeoutError:

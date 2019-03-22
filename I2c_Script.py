@@ -128,11 +128,11 @@ class Run(threading.Thread):
                                                           " in " + command[1])
 
                 except I2cNackError:
-                    break
+                    self.script_log_label.text = str(I2cNackError)
                 except I2cIOError:
-                    break
+                    self.script_log_label.text = str(I2cNackError)
                 except I2cTimeoutError:
-                    break
+                    self.script_log_label.text = str(I2cNackError)
                 self.script_progress_bar.value += progress_segment
 
             elif 'wait' in command:
