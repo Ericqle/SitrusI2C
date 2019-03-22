@@ -35,15 +35,31 @@ class LutPopup(Popup):
         final_lut_ints = list()
         final_lut_bins = list()
 
+        count = 4
+        b_fix = False
         for address in addresses:
             bin_string = format(address, '06b')
 
             a = ((bin_weight_eye_adj_param2 * int(bin_string[0])) + (
                         bin_weight_eye_adj_param1 * int(bin_string[1]))) * a_pre
-            b = ((bin_weight_eye_adj_param2 * int(bin_string[2])) + (
-                        bin_weight_eye_adj_param1 * int(bin_string[3]))) * b_main
-            c = ((bin_weight_eye_adj_param2 * int(bin_string[4])) + (
-                        bin_weight_eye_adj_param1 * int(bin_string[5]))) * c_post
+
+            if ((address == 12 or address == 28 or address == 44 or address == 60) or b_fix is True) and address != 0:
+                b_fix = True
+                b = ((2 * int(bin_string[2])) + (1 * int(bin_string[3]))) * b_main
+                count -= 1
+                if count == 0:
+                    b_fix = False
+                    count = 4
+            else:
+                b = ((bin_weight_eye_adj_param2 * int(bin_string[2])) + (
+                            bin_weight_eye_adj_param1 * int(bin_string[3]))) * b_main
+
+            if (address + 1) % 4 == 0:
+                c = ((2 * int(bin_string[4])) + (1 * int(bin_string[5]))) * c_post
+            else:
+                c = ((bin_weight_eye_adj_param2 * int(bin_string[4])) + (
+                            bin_weight_eye_adj_param1 * int(bin_string[5]))) * c_post
+
             sum_factor = a + b + c
 
             y_values.append(sum_factor)
@@ -74,6 +90,9 @@ class LutPopup(Popup):
             # get lut valuse
             lut = self.get_lut(self.addresses, bin_weight_eye_adj_param1, bin_weight_eye_adj_param2, a_pre, b_main,
                                c_post, scale_factor)
+
+            for val in lut:
+                print(val)
 
             # transpose to get 64 bit values
             lut_transposed = [''.join(s) for s in zip(*lut)]
