@@ -35,29 +35,29 @@ class LutPopup(Popup):
         final_lut_ints = list()
         final_lut_bins = list()
 
-        count = 4
-        b_fix = False
+        # count = 4
+        # b_fix = False
         for address in addresses:
             bin_string = format(address, '06b')
 
             a = ((bin_weight_eye_adj_param2 * int(bin_string[0])) + (
                         bin_weight_eye_adj_param1 * int(bin_string[1]))) * a_pre
 
-            if ((address == 12 or address == 28 or address == 44 or address == 60) or b_fix is True) and address != 0:
-                b_fix = True
-                b = ((2 * int(bin_string[2])) + (1 * int(bin_string[3]))) * b_main
-                count -= 1
-                if count == 0:
-                    b_fix = False
-                    count = 4
-            else:
-                b = ((bin_weight_eye_adj_param2 * int(bin_string[2])) + (
+            # if ((address == 12 or address == 28 or address == 44 or address == 60) or b_fix is True) and address != 0:
+            #     b_fix = True
+            #     b = ((2 * int(bin_string[2])) + (1 * int(bin_string[3]))) * b_main
+            #     count -= 1
+            #     if count == 0:
+            #         b_fix = False
+            #         count = 4
+            # else:
+            b = ((bin_weight_eye_adj_param2 * int(bin_string[2])) + (
                             bin_weight_eye_adj_param1 * int(bin_string[3]))) * b_main
 
-            if (address + 1) % 4 == 0:
-                c = ((2 * int(bin_string[4])) + (1 * int(bin_string[5]))) * c_post
-            else:
-                c = ((bin_weight_eye_adj_param2 * int(bin_string[4])) + (
+            # if (address + 1) % 4 == 0:
+            #     c = ((2 * int(bin_string[4])) + (1 * int(bin_string[5]))) * c_post
+            # else:
+            c = ((bin_weight_eye_adj_param2 * int(bin_string[4])) + (
                             bin_weight_eye_adj_param1 * int(bin_string[5]))) * c_post
 
             sum_factor = a + b + c
