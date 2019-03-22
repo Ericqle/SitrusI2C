@@ -168,7 +168,7 @@ class I2CScreen(Screen):
                         self.slave_device.write_to(address, data)
 
                         if int(hex(self.slave_device.read_from(address, 1)[0]), 16) == data[0]:
-                            return "0x" + write_value + " has been written to " + "0x" + str(address) + "\n" +\
+                            return "0x" + write_value + " has been written to " + hex(address) + "\n" +\
                                    "Read value: " + hex(self.slave_device.read_from(address, 1)[0])
                         else:
                             return "Error: " + "0x" + write_value + " could not be written to " + "0x" + str(address) +\
