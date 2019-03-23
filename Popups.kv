@@ -60,11 +60,13 @@
                     Label:
                         text: '1: '
                     TextInput:
+                        write_tab: False
                         multiline: False
                         id: pam1
                     Label:
                         text: '2: '
                     TextInput:
+                        write_tab: False
                         multiline: False
                         id: pam2
             BoxLayout:
@@ -85,16 +87,19 @@
                     Label:
                         text: 'A: '
                     TextInput:
+                        write_tab: False
                         multiline: False
                         id: a
                     Label:
                         text: 'B: '
                     TextInput:
+                        write_tab: False
                         multiline: False
                         id: b
                     Label:
                         text: 'C: '
                     TextInput:
+                        write_tab: False
                         multiline: False
                         id: c
 
@@ -118,6 +123,7 @@
                     Label:
                         text: '(0 to 1): '
                     TextInput:
+                        write_tab: False
                         multiline: False
                         size_hint: .3, 1
                         id: scale
@@ -152,6 +158,8 @@
                 size_hint: .75, 1
                 text: "LSB Address:"
             TextInput:
+                write_tab: False
+                multiline: False
                 size_hint: .75, 1
                 id: start_address
                 text: '0x018e'
@@ -162,6 +170,7 @@
             effect_cls: "ScrollEffect"
             scroll_type: ['bars']
             TextInput:
+                write_tab: False
                 id: lut_text
                 size_hint_y: None
                 height: max(self.minimum_height, scroller.height)
