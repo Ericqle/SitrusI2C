@@ -183,3 +183,29 @@
             text: 'Okay'
             on_release: root.dismiss()
             size_hint: 1, .50
+
+<ConfirmtaionWritePopup@Popup>:
+    title: "Confirm"
+    lane: ''
+    size_hint: .5, .3
+    auto_dismiss: False
+    BoxLayout:
+        orientation: 'vertical'
+        Label:
+            font_size: '16sp'
+            text: 'Write All Addresses in ' + root.lane + ' to Default Values'
+
+
+        BoxLayout:
+            orientation: 'horizontal'
+            padding: 5
+            spacing: 5
+
+            Button:
+                text: 'Cancel'
+                on_press: root.dismiss()
+            Button:
+                text: 'Write All'
+                on_press:
+                    app.root.get_screen("i2c_screen").open_write_lane()
+                    root.dismiss()

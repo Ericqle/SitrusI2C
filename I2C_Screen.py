@@ -91,9 +91,6 @@ class LutPopup(Popup):
             lut = self.get_lut(self.addresses, bin_weight_eye_adj_param1, bin_weight_eye_adj_param2, a_pre, b_main,
                                c_post, scale_factor)
 
-            for val in lut:
-                print(val)
-
             # transpose to get 64 bit values
             lut_transposed = [''.join(s) for s in zip(*lut)]
 
@@ -350,6 +347,11 @@ class I2CScreen(Screen):
                 string = row["address"] + ": " + reg_data
                 strings.append(string)
         return strings
+
+    def open_write_all_popup(self):
+        write_all_confirm = Factory.ConfirmtaionWritePopup()
+        write_all_confirm.lane = self.i2c_tabbed_panel.current_tab.text
+        write_all_confirm.open()
 
     def open_write_lane(self):
         if self.slave_device is not None:
