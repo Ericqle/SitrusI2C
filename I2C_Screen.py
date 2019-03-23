@@ -10,6 +10,7 @@ from kivy.uix.popup import Popup
 from pathlib import Path
 import ntpath
 import re
+import os
 import csv
 ntpath.basename("a/b/c")
 
@@ -393,7 +394,10 @@ class I2CScreen(Screen):
                              quoting=csv.QUOTE_NONE,
                              skipinitialspace=True)
 
-        with open(str(Path.home()) + '/Desktop/LUT_Script_' + str(self.lut_script_index) + '.csv', 'w') as f:
+        if not os.path.exists(str(Path.home()) + '/Desktop/out'):
+            os.mkdir(str(Path.home()) + '/Desktop/out')
+
+        with open(str(Path.home()) + '/Desktop/out/LUT_Script_' + str(self.lut_script_index) + '.csv', 'w') as f:
             writer = csv.writer(f, dialect='myDialect')
             for row in commands:
                 writer.writerow(row)
