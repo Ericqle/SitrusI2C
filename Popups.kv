@@ -1,4 +1,5 @@
 <LutPopup>:
+    export_csv_checkbox: export_csv_checkbox
     pam1: pam1
     pam2: pam2
     a: a
@@ -137,10 +138,21 @@
             Button:
                 text: "Make LUT Script"
                 on_press:
-                    app.root.get_screen("i2c_screen").create_load_lut_script(start_address.text, root.script_values)
+                    app.root.get_screen("i2c_screen").create_load_lut_script(start_address.text, root.script_values, export_csv_checkbox)
+
             Label:
+                size_hint: .3, 1
+                text: " Export:"
+            CheckBox:
+                id: export_csv_checkbox
+                size_hint: .25, 1
+                active: False
+
+            Label:
+                size_hint: .75, 1
                 text: "LSB Address:"
             TextInput:
+                size_hint: .75, 1
                 id: start_address
                 text: '0x018e'
 

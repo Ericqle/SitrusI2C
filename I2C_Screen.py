@@ -7,6 +7,7 @@ from pyftdi.usbtools import UsbToolsError
 from usb.core import USBError
 from I2c_Script import I2cScript
 from kivy.uix.popup import Popup
+from pathlib import Path
 import ntpath
 import re
 import csv
@@ -117,6 +118,7 @@ class LutPopup(Popup):
 
 
 class I2CScreen(Screen):
+    lut_script_index = 0
     script_list = list()
     lane_list = list()
     slave_device = None
@@ -385,7 +387,21 @@ class I2CScreen(Screen):
                         status = False
         return status
 
-    def create_load_lut_script(self, start_address, values):
+    def export_lut_csv(self, commands):
+        csv.register_dialect('myDialect',
+                             delimiter=';',
+                             quoting=csv.QUOTE_NONE,
+                             skipinitialspace=True)
+
+        with open(str(Path.home()) + '/Desktop/LUT_Script_' + str(self.lut_script_index) + '.csv', 'w') as f:
+            writer = csv.writer(f, dialect='myDialect')
+            for row in commands:
+                writer.writerow(row)
+
+        self.lut_script_index += 1
+        f.close()
+
+    def create_load_lut_script(self, start_address, values, export_csv_checkbox):
         if len(values) != 0:
             if self.validate_address(start_address):
                 if 'LUT_Script' in self.script_list:
@@ -403,6 +419,8 @@ class I2CScreen(Screen):
                     address = "{0:#0{1}x}".format(address, 6)
 
                 self.script_list.append(I2cScript('LUT_Script', commands))
+                if export_csv_checkbox.active:
+                    self.export_lut_csv(commands)
 
                 lut_script_notice = Factory.NoticePopup()
                 lut_script_notice.text = "LUT Script has been Added"
