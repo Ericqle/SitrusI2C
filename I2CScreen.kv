@@ -231,7 +231,8 @@
     i2c_tabbed_panel: i2c_tabbed_panel
     bit_recycle_view: bit_recycle_view
 
-    ActionBar:
+    BoxLayout:
+        orientation: 'horizontal'
         pos_hint: {'top':1}
         size_hint_y: .075
         ActionView:
@@ -253,45 +254,45 @@
                 title: '    I2C Tool'
                 with_previous: False
 
-            ActionButton:
-                text: "Menu"
-                on_press: root.manager.current = 'menu_screen'
+        ActionButton:
+            text: "Menu"
+            on_press: root.manager.current = 'menu_screen'
 
-            ActionSeparator:
+        ActionSeparator:
 
-            ActionButton:
-                text: "LUT"
-                on_press: root.open_lut_popup()
+        ActionButton:
+            text: "LUT"
+            on_press: root.open_lut_popup()
 
-            ActionSeparator:
+        ActionSeparator:
 
-            ActionButton:
-                text: "Read"
-                on_press: i2c_screen.open_single_read()
+        ActionButton:
+            text: "Read"
+            on_press: i2c_screen.open_single_read()
 
-            ActionButton:
-                text: "Write"
-                on_press: i2c_screen.open_single_write()
+        ActionButton:
+            text: "Write"
+            on_press: i2c_screen.open_single_write()
 
-            ActionSeparator:
+        ActionSeparator:
 
-            ActionButton:
-                text: "Read All"
-                on_press: i2c_screen.open_read_lane()
+        ActionButton:
+            text: "Read All"
+            on_press: i2c_screen.open_read_lane()
 
-            ActionButton:
-                text: "Write All"
-                on_press: i2c_screen.open_write_all_popup()
+        ActionButton:
+            text: "Write All"
+            on_press: i2c_screen.open_write_all_popup()
 
-            ActionSeparator:
+        ActionSeparator:
 
-            ActionButton:
-                text: "Load Scripts"
-                on_press: i2c_screen.open_load_script()
+        ActionButton:
+            text: "Load Scripts"
+            on_press: i2c_screen.open_load_script()
 
-            ActionButton:
-                text: "Run Script"
-                on_press: i2c_screen.open_run_script()
+        ActionButton:
+            text: "Run Script"
+            on_press: i2c_screen.open_run_script()
 
     BoxLayout:
         size_hint: 1, .925

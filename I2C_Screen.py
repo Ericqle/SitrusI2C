@@ -192,8 +192,8 @@ class I2CScreen(Screen):
                                 return_value = "0x" + write_value + " has been written to " + hex(address) + "\n" +\
                                        "Read value: " + hex(self.slave_device.read_from(address, 1)[0])
                             else:
-                                return_value = "Error: " + "0x" + write_value + " could not be written to " + "0x" +\
-                                       str(address) + "\n" + "Read value: " +\
+                                return_value = "Error: " + "0x" + write_value + " could not be written to " +\
+                                       hex(address) + "\n" + "Read value: " +\
                                        hex(self.slave_device.read_from(address, 1)[0])
                         except FtdiError:
                             usb_slave_error = Factory.ErrorPopup()
