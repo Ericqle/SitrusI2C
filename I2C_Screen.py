@@ -12,6 +12,7 @@ import ntpath
 import re
 import os
 import csv
+import math
 ntpath.basename("a/b/c")
 
 
@@ -29,7 +30,8 @@ class LutPopup(Popup):
     script_values = list()
 
     @staticmethod
-    def get_lut(addresses, bin_weight_eye_adj_param1, bin_weight_eye_adj_param2, a_pre, b_main, c_post, scale_factor):
+    def get_lut(addresses, bin_weight_eye_adj_param1, bin_weight_eye_adj_param2, a_pre, b_main, c_post, scale_factor,
+                round_checkbox):
 
         y_values = list()
         minimized_values = list()
@@ -75,9 +77,18 @@ class LutPopup(Popup):
         for normalized_value in normalized_values:
             final_lut_ints.append(((normalized_value - 31.5) * scale_factor) + 31.5)
 
-        for final_lut_int in final_lut_ints:
-            final_lut_bins.append(format(int(final_lut_int), '06b'))
+        if not round_checkbox.active:
+            for final_lut_int in final_lut_ints:
+                final_lut_bins.append(format(int(final_lut_int), '06b'))
 
+        elif round_checkbox.active:
+            i = 0
+            for final_lut_int in final_lut_ints:
+                if i <= 31:
+                    final_lut_bins.append(format(math.ceil(final_lut_int), '06b'))
+                    i += 1
+                else:
+                    final_lut_bins.append(format(int(final_lut_int), '06b'))
         return final_lut_bins
 
     def calc_lut(self):
@@ -88,10 +99,11 @@ class LutPopup(Popup):
             b_main = float(self.b.text)
             c_post = float(self.c.text)
             scale_factor = float(self.scale.text)
+            round_checkbox = self.round_checkbox
 
             # get lut valuse
             lut = self.get_lut(self.addresses, bin_weight_eye_adj_param1, bin_weight_eye_adj_param2, a_pre, b_main,
-                               c_post, scale_factor)
+                               c_post, scale_factor, round_checkbox)
 
             # transpose to get 64 bit values
             lut_transposed = [''.join(s) for s in zip(*lut)]

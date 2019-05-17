@@ -1,5 +1,6 @@
 <LutPopup>:
     export_csv_checkbox: export_csv_checkbox
+    round_checkbox: round_checkbox
     pam1: pam1
     pam2: pam2
     a: a
@@ -145,6 +146,14 @@
                 text: "Make LUT Script"
                 on_press:
                     app.root.get_screen("i2c_screen").create_load_lut_script(start_address.text, root.script_values, export_csv_checkbox)
+
+            Label:
+                size_hint: .3, 1
+                text: "  Round:"
+            CheckBox:
+                size_hint: .25, 1
+                active: False
+                id: round_checkbox
 
             Label:
                 size_hint: .3, 1
