@@ -25,16 +25,17 @@ class I2cScript:
                 preview += "Error: unknown command"
         return preview
 
-    def execute(self, slave, script_log_label, script_progress_bar, script_preview_text_input):
-        run = Run(self.commands, slave, script_log_label, script_progress_bar, script_preview_text_input)
+    def execute(self, slave, script_log_label, script_progress_bar, script_preview_text_input, i2c_device):
+        run = Run(self.commands, slave, script_log_label, script_progress_bar, script_preview_text_input, i2c_device)
         run.start()
 
 
 class Run(threading.Thread):
-    def __init__(self, commands, slave, script_log_label, script_progress_bar, script_preview_text_input):
+    def __init__(self, commands, slave, script_log_label, script_progress_bar, script_preview_text_input, i2c_device):
         super(Run, self).__init__()
         self.commands = commands
         self.slave = slave
+        self.i2c_device = i2c_device
         self.script_log_label = script_log_label
         self.script_progress_bar = script_progress_bar
         self.script_preview_text_input = script_preview_text_input
@@ -151,4 +152,5 @@ class Run(threading.Thread):
 
         self.script_log_label.text = "End Script"
         self.script_progress_bar.value = 0
+        self.i2c_device.terminate()
 

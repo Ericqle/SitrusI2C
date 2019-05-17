@@ -123,7 +123,28 @@ class I2CScreen(Screen):
     script_list = list()
     lane_list = list()
     slave_device = None
+    i2c_device = I2cController()
+    port_address = None
     script_pop_up_reference = None
+
+    def activate_osx(self):
+        try:
+            self.i2c_device = I2cController()
+            self.i2c_device.configure('ftdi://ftdi:232h/1')
+            self.slave_device = self.i2c_device.get_port(int(self.port_address, 16))
+            self.slave_device.configure_register(bigendian=True, width=2)
+        except USBError:
+            usb_error = Factory.ErrorPopup()
+            usb_error.text = str(USBError)
+            usb_error.open()
+        except UsbToolsError:
+            usb_tool_error = Factory.ErrorPopup()
+            usb_tool_error.text = str(UsbToolsError)
+            usb_tool_error.open()
+        except I2cIOError:
+            i2c_io_error = Factory.ErrorPopup()
+            i2c_io_error.text = str(I2cIOError)
+            i2c_io_error.open()
 
     @staticmethod
     def open_write_prompt(address):
@@ -171,8 +192,9 @@ class I2CScreen(Screen):
         single_read_pop_up.open()
 
     def single_write(self, address, value):
+        self.activate_osx()
         return_value = "Error occurred when writing"
-        if self.slave_device is not None:
+        if self.i2c_device.configured is True:
             if self.validate_address(address):
                 if value != '':
                     if self.validate_input(value):
@@ -215,6 +237,7 @@ class I2CScreen(Screen):
                 return_value = "Error: address must be a 2->4 digit hex value"
         else:
             return_value = "Error: no slave device"
+        self.i2c_device.terminate()
         return return_value
 
     def single_read(self, address):
@@ -224,7 +247,8 @@ class I2CScreen(Screen):
             return "ERROR: address must be a 2->4 digit hex value"
 
     def write(self, address, value):
-        if self.slave_device is not None:
+        self.activate_osx()
+        if self.i2c_device.configured is True:
             if value != '':
                 try:
                     temp_address = int(address, 16)
@@ -250,12 +274,15 @@ class I2CScreen(Screen):
                     pass
                 except I2cTimeoutError:
                     pass
+        self.i2c_device.terminate()
 
     def read(self, address):
-        if self.slave_device is not None:
+        self.activate_osx()
+        if self.i2c_device.configured is True:
             try:
                 address = int(address, 16)
                 reg_data = hex(self.slave_device.read_from(address, 1)[0])  # read
+                self.i2c_device.terminate()
                 return reg_data
             except FtdiError:
                 usb_slave_error = Factory.ErrorPopup()
@@ -269,11 +296,13 @@ class I2CScreen(Screen):
                 pass
             except I2cTimeoutError:
                 pass
+            self.i2c_device.terminate()
             return "Read_Fail"
         else:
             no_slave_error = Factory.ErrorPopup()
             no_slave_error.text = "Error: No Save Device"
             no_slave_error.open()
+            self.i2c_device.terminate()
             return ''
 
     def get_dual_display_read(self, address):
@@ -285,24 +314,25 @@ class I2CScreen(Screen):
         return bin(int(reg_data, 16))[2:].zfill(8) + " (" + reg_data + ")"
 
     def configure_ftdi(self, port_address):
-        try:
-            i2c = I2cController()
-            i2c.configure('ftdi://ftdi:232h/1')
-            slave_device = i2c.get_port(int(port_address, 16))
-            slave_device.configure_register(bigendian=True, width=2)
-            self.slave_device = slave_device
-        except USBError:
-            usb_error = Factory.ErrorPopup()
-            usb_error.text = str(USBError)
-            usb_error.open()
-        except UsbToolsError:
-            usb_tool_error = Factory.ErrorPopup()
-            usb_tool_error.text = str(UsbToolsError)
-            usb_tool_error.open()
-        except I2cIOError:
-            i2c_io_error = Factory.ErrorPopup()
-            i2c_io_error.text = str(I2cIOError)
-            i2c_io_error.open()
+        self.port_address = port_address
+        # try:
+        #     i2c = I2cController()
+        #     i2c.configure('ftdi://ftdi:232h/1')
+        #     slave_device = i2c.get_port(int(port_address, 16))
+        #     slave_device.configure_register(bigendian=True, width=2)
+        #     self.slave_device = slave_device
+        # except USBError:
+        #     usb_error = Factory.ErrorPopup()
+        #     usb_error.text = str(USBError)
+        #     usb_error.open()
+        # except UsbToolsError:
+        #     usb_tool_error = Factory.ErrorPopup()
+        #     usb_tool_error.text = str(UsbToolsError)
+        #     usb_tool_error.open()
+        # except I2cIOError:
+        #     i2c_io_error = Factory.ErrorPopup()
+        #     i2c_io_error.text = str(I2cIOError)
+        #     i2c_io_error.open()
 
     def configure_lane_tabs(self):
         self.i2c_tabbed_panel.clear_widgets()
@@ -329,16 +359,11 @@ class I2CScreen(Screen):
                         self.bit_recycle_view.data = ({'text': bit} for bit in i2c_address.bits)
 
     def open_read_lane(self):
-        if self.slave_device is not None:
-            read_lane_popup = Factory.ReadLanePopup()
-            read_lane_popup.lane_name = self.i2c_tabbed_panel.current_tab.text
-            for string in self.read_all_in_lane():
-                read_lane_popup.data += string + '\n'
-            read_lane_popup.open()
-        else:
-            no_slave_error = Factory.ErrorPopup()
-            no_slave_error.text = "Error: No Save Device"
-            no_slave_error.open()
+        read_lane_popup = Factory.ReadLanePopup()
+        read_lane_popup.lane_name = self.i2c_tabbed_panel.current_tab.text
+        for string in self.read_all_in_lane():
+            read_lane_popup.data += string + '\n'
+        read_lane_popup.open()
 
     def read_all_in_lane(self):
         strings = list()
@@ -357,17 +382,12 @@ class I2CScreen(Screen):
         write_all_confirm.open()
 
     def open_write_lane(self):
-        if self.slave_device is not None:
-            write_all_popup = Factory.WriteAllPopup()
-            if self.write_all_in_lane() is True:
-                write_all_popup.text = "All addresses have successfully been written to default values"
-            else:
-                write_all_popup.text = "Error occured while writing"
-            write_all_popup.open()
+        write_all_popup = Factory.WriteAllPopup()
+        if self.write_all_in_lane() is True:
+            write_all_popup.text = "All addresses have successfully been written to default values"
         else:
-            no_slave_error = Factory.ErrorPopup()
-            no_slave_error.text = "Error: No Save Device"
-            no_slave_error.open()
+            write_all_popup.text = "Error occured while writing"
+        write_all_popup.open()
 
     def write_all_in_lane(self):
         status = True
@@ -463,25 +483,22 @@ class I2CScreen(Screen):
         self.script_pop_up_reference.script_preview_text_input.text = preview
 
     def run_script(self):
-        if self.slave_device is not None:
-            for script in self.script_list:
-                if script.script_name == self.script_pop_up_reference.currently_selected_script:
+        for script in self.script_list:
+            if script.script_name == self.script_pop_up_reference.currently_selected_script:
+                self.activate_osx()
+                if self.i2c_device.configured is True:
                     script.execute(self.slave_device, self.script_pop_up_reference.script_log_label,
                                    self.script_pop_up_reference.script_progress_bar,
-                                   self.script_pop_up_reference.script_preview_text_input)
+                                   self.script_pop_up_reference.script_preview_text_input,
+                                   self.i2c_device)
 
     @staticmethod
     def open_load_script():
         Factory.I2cLoadScriptPopup().open()
 
     def open_run_script(self):
-        if self.slave_device is not None:
-            self.script_pop_up_reference = Factory.I2cRunScriptPopup()
-            self.script_pop_up_reference.scripts_recycle_view.data = [{'script_name': script.script_name,
-                                                                       'script_preview': script.get_preview()}
-                                                                      for script in self.script_list]
-            self.script_pop_up_reference.open()
-        else:
-            no_slave_error = Factory.ErrorPopup()
-            no_slave_error.text = "Error: No Save Device"
-            no_slave_error.open()
+        self.script_pop_up_reference = Factory.I2cRunScriptPopup()
+        self.script_pop_up_reference.scripts_recycle_view.data = [{'script_name': script.script_name,
+                                                                   'script_preview': script.get_preview()}
+                                                                  for script in self.script_list]
+        self.script_pop_up_reference.open()
